@@ -1,0 +1,318 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Git 常用命令速查与最佳实践 | 宫野琦Blog</title><meta name="author" content="宫野琦"><meta name="copyright" content="宫野琦"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一篇文章带你掌握 Git 核心命令，提升开发效率">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git 常用命令速查与最佳实践">
+<meta property="og:url" content="https://gongyeqi.top/2026/06/18/git-commands-guide/index.html">
+<meta property="og:site_name" content="宫野琦Blog">
+<meta property="og:description" content="一篇文章带你掌握 Git 核心命令，提升开发效率">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gongyeqi.top/img/background.jpg">
+<meta property="article:published_time" content="2026-06-18T03:00:00.000Z">
+<meta property="article:modified_time" content="2026-06-18T05:49:13.738Z">
+<meta property="article:author" content="宫野琦">
+<meta property="article:tag" content="Git">
+<meta property="article:tag" content="工具">
+<meta property="article:tag" content="效率">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gongyeqi.top/img/background.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Git 常用命令速查与最佳实践",
+  "url": "https://gongyeqi.top/2026/06/18/git-commands-guide/",
+  "image": "https://gongyeqi.top/img/background.jpg",
+  "datePublished": "2026-06-18T03:00:00.000Z",
+  "dateModified": "2026-06-18T05:49:13.738Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "宫野琦",
+      "url": "https://gongyeqi.top"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://gongyeqi.top/2026/06/18/git-commands-guide/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Git 常用命令速查与最佳实践',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/neko01.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fas fa-feather-alt"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/background.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">宫野琦Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Git 常用命令速查与最佳实践</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fas fa-feather-alt"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Git 常用命令速查与最佳实践</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-06-18T03:00:00.000Z" title="发表于 2026-06-18 11:00:00">2026-06-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-06-18T05:49:13.738Z" title="更新于 2026-06-18 13:49:13">2026-06-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/">技术教程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Git-常用命令速查与最佳实践"><a href="#Git-常用命令速查与最佳实践" class="headerlink" title="Git 常用命令速查与最佳实践"></a>Git 常用命令速查与最佳实践</h1><p>Git 是程序员必备的版本控制工具。本文整理了日常开发中最常用的 Git 命令和工作流程。</p>
+<h2 id="一、基础配置"><a href="#一、基础配置" class="headerlink" title="一、基础配置"></a>一、基础配置</h2><h3 id="1-1-设置用户信息"><a href="#1-1-设置用户信息" class="headerlink" title="1.1 设置用户信息"></a>1.1 设置用户信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name <span class="string">&quot;你的名字&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;你的邮箱&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-查看配置"><a href="#1-2-查看配置" class="headerlink" title="1.2 查看配置"></a>1.2 查看配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --list</span><br><span class="line">git config --global --list</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-配置-SSH"><a href="#1-3-配置-SSH" class="headerlink" title="1.3 配置 SSH"></a>1.3 配置 SSH</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成 SSH 密钥</span></span><br><span class="line">ssh-keygen -t rsa -b 4096 -C <span class="string">&quot;你的邮箱&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看公钥（添加到 GitHub）</span></span><br><span class="line"><span class="built_in">cat</span> ~/.ssh/id_rsa.pub</span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试连接</span></span><br><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、仓库操作"><a href="#二、仓库操作" class="headerlink" title="二、仓库操作"></a>二、仓库操作</h2><h3 id="2-1-创建仓库"><a href="#2-1-创建仓库" class="headerlink" title="2.1 创建仓库"></a>2.1 创建仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 初始化本地仓库</span></span><br><span class="line">git init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 克隆远程仓库</span></span><br><span class="line">git <span class="built_in">clone</span> &lt;仓库地址&gt;</span><br><span class="line">git <span class="built_in">clone</span> -b &lt;分支名&gt; &lt;仓库地址&gt;  <span class="comment"># 克隆指定分支</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-远程仓库管理"><a href="#2-2-远程仓库管理" class="headerlink" title="2.2 远程仓库管理"></a>2.2 远程仓库管理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看远程仓库</span></span><br><span class="line">git remote -v</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加远程仓库</span></span><br><span class="line">git remote add origin &lt;仓库地址&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改远程仓库地址</span></span><br><span class="line">git remote set-url origin &lt;新地址&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除远程仓库</span></span><br><span class="line">git remote remove origin</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、日常开发流程"><a href="#三、日常开发流程" class="headerlink" title="三、日常开发流程"></a>三、日常开发流程</h2><h3 id="3-1-查看状态"><a href="#3-1-查看状态" class="headerlink" title="3.1 查看状态"></a>3.1 查看状态</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git status              <span class="comment"># 查看工作区状态</span></span><br><span class="line">git status -s           <span class="comment"># 简洁模式</span></span><br><span class="line">git diff                <span class="comment"># 查看修改内容</span></span><br><span class="line">git diff --staged       <span class="comment"># 查看暂存区修改</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-添加与提交"><a href="#3-2-添加与提交" class="headerlink" title="3.2 添加与提交"></a>3.2 添加与提交</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git add &lt;文件名&gt;         <span class="comment"># 添加指定文件</span></span><br><span class="line">git add .               <span class="comment"># 添加所有修改</span></span><br><span class="line">git add -A              <span class="comment"># 添加所有（包括删除）</span></span><br><span class="line"></span><br><span class="line">git commit -m <span class="string">&quot;提交信息&quot;</span>  <span class="comment"># 提交</span></span><br><span class="line">git commit -am <span class="string">&quot;提交信息&quot;</span> <span class="comment"># 添加并提交（已跟踪的文件）</span></span><br><span class="line">git commit --amend      <span class="comment"># 修改最后一次提交</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-推送与拉取"><a href="#3-3-推送与拉取" class="headerlink" title="3.3 推送与拉取"></a>3.3 推送与拉取</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git push origin &lt;分支名&gt;        <span class="comment"># 推送到远程</span></span><br><span class="line">git push -u origin &lt;分支名&gt;     <span class="comment"># 首次推送并关联</span></span><br><span class="line">git push --force               <span class="comment"># 强制推送（慎用！）</span></span><br><span class="line"></span><br><span class="line">git pull origin &lt;分支名&gt;        <span class="comment"># 拉取远程更新</span></span><br><span class="line">git pull --rebase               <span class="comment"># 拉取并变基</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="四、分支管理"><a href="#四、分支管理" class="headerlink" title="四、分支管理"></a>四、分支管理</h2><h3 id="4-1-分支操作"><a href="#4-1-分支操作" class="headerlink" title="4.1 分支操作"></a>4.1 分支操作</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git branch              <span class="comment"># 查看本地分支</span></span><br><span class="line">git branch -a           <span class="comment"># 查看所有分支</span></span><br><span class="line">git branch -r           <span class="comment"># 查看远程分支</span></span><br><span class="line">git branch &lt;分支名&gt;      <span class="comment"># 创建分支</span></span><br><span class="line">git checkout &lt;分支名&gt;    <span class="comment"># 切换分支</span></span><br><span class="line">git checkout -b &lt;分支名&gt; <span class="comment"># 创建并切换分支</span></span><br><span class="line">git branch -d &lt;分支名&gt;   <span class="comment"># 删除本地分支</span></span><br><span class="line">git push origin --delete &lt;分支名&gt;  <span class="comment"># 删除远程分支</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-分支合并"><a href="#4-2-分支合并" class="headerlink" title="4.2 分支合并"></a>4.2 分支合并</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git merge &lt;分支名&gt;           <span class="comment"># 合并分支</span></span><br><span class="line">git merge --abort            <span class="comment"># 取消合并</span></span><br><span class="line">git merge --no-ff &lt;分支名&gt;   <span class="comment"># 禁用快进合并</span></span><br><span class="line"></span><br><span class="line">git rebase &lt;分支名&gt;          <span class="comment"># 变基</span></span><br><span class="line">git rebase --<span class="built_in">continue</span>        <span class="comment"># 解决冲突后继续</span></span><br><span class="line">git rebase --abort           <span class="comment"># 取消变基</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="五、常用工作流"><a href="#五、常用工作流" class="headerlink" title="五、常用工作流"></a>五、常用工作流</h2><h3 id="5-1-Git-Flow-分支策略"><a href="#5-1-Git-Flow-分支策略" class="headerlink" title="5.1 Git Flow 分支策略"></a>5.1 Git Flow 分支策略</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 主分支：main / master</span></span><br><span class="line"><span class="comment"># 开发分支：develop</span></span><br><span class="line"><span class="comment"># 功能分支：feature/xxx</span></span><br><span class="line"><span class="comment"># 修复分支：hotfix/xxx</span></span><br><span class="line"><span class="comment"># 发布分支：release/xxx</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建功能分支</span></span><br><span class="line">git checkout -b feature/login develop</span><br><span class="line"></span><br><span class="line"><span class="comment"># 完成功能后合并回 develop</span></span><br><span class="line">git checkout develop</span><br><span class="line">git merge --no-ff feature/login</span><br><span class="line">git branch -d feature/login</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-GitHub-Flow（推荐）"><a href="#5-2-GitHub-Flow（推荐）" class="headerlink" title="5.2 GitHub Flow（推荐）"></a>5.2 GitHub Flow（推荐）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 从 main 创建分支</span></span><br><span class="line">git checkout -b feature/xxx main</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 开发并提交</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;feat: 添加xxx功能&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 推送到远程</span></span><br><span class="line">git push -u origin feature/xxx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 创建 Pull Request 进行代码审查</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 合并后删除分支</span></span><br><span class="line">git branch -d feature/xxx</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、撤销操作"><a href="#六、撤销操作" class="headerlink" title="六、撤销操作"></a>六、撤销操作</h2><h3 id="6-1-撤销工作区修改"><a href="#6-1-撤销工作区修改" class="headerlink" title="6.1 撤销工作区修改"></a>6.1 撤销工作区修改</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout -- &lt;文件名&gt;     <span class="comment"># 撤销文件修改</span></span><br><span class="line">git restore &lt;文件名&gt;          <span class="comment"># 新语法（推荐）</span></span><br><span class="line">git restore .                <span class="comment"># 撤销所有修改</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-撤销暂存区"><a href="#6-2-撤销暂存区" class="headerlink" title="6.2 撤销暂存区"></a>6.2 撤销暂存区</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git reset HEAD &lt;文件名&gt;       <span class="comment"># 取消暂存</span></span><br><span class="line">git restore --staged &lt;文件名&gt;  <span class="comment"># 新语法</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="6-3-撤销提交"><a href="#6-3-撤销提交" class="headerlink" title="6.3 撤销提交"></a>6.3 撤销提交</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git reset --soft HEAD~1      <span class="comment"># 撤销提交，保留修改</span></span><br><span class="line">git reset --mixed HEAD~1     <span class="comment"># 撤销提交和暂存（默认）</span></span><br><span class="line">git reset --hard HEAD~1      <span class="comment"># 完全撤销（危险！）</span></span><br><span class="line"></span><br><span class="line">git revert HEAD              <span class="comment"># 创建反向提交（安全）</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="七、日志与历史"><a href="#七、日志与历史" class="headerlink" title="七、日志与历史"></a>七、日志与历史</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span>                     <span class="comment"># 查看提交历史</span></span><br><span class="line">git <span class="built_in">log</span> --oneline           <span class="comment"># 单行显示</span></span><br><span class="line">git <span class="built_in">log</span> --graph             <span class="comment"># 图形化显示</span></span><br><span class="line">git <span class="built_in">log</span> --author=<span class="string">&quot;用户名&quot;</span>    <span class="comment"># 按作者筛选</span></span><br><span class="line">git <span class="built_in">log</span> --since=<span class="string">&quot;2026-01-01&quot;</span> <span class="comment"># 按日期筛选</span></span><br><span class="line"></span><br><span class="line">git blame &lt;文件名&gt;           <span class="comment"># 查看每行代码的修改者</span></span><br><span class="line">git reflog                  <span class="comment"># 查看所有操作记录</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="八、储藏与清理"><a href="#八、储藏与清理" class="headerlink" title="八、储藏与清理"></a>八、储藏与清理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git stash                   <span class="comment"># 储藏当前修改</span></span><br><span class="line">git stash save <span class="string">&quot;描述&quot;</span>        <span class="comment"># 储藏并添加描述</span></span><br><span class="line">git stash list              <span class="comment"># 查看储藏列表</span></span><br><span class="line">git stash pop               <span class="comment"># 恢复并删除储藏</span></span><br><span class="line">git stash apply             <span class="comment"># 恢复但不删除</span></span><br><span class="line">git stash drop              <span class="comment"># 删除储藏</span></span><br><span class="line"></span><br><span class="line">git clean -n                <span class="comment"># 预览要删除的文件</span></span><br><span class="line">git clean -f                <span class="comment"># 删除未跟踪的文件</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="九、标签管理"><a href="#九、标签管理" class="headerlink" title="九、标签管理"></a>九、标签管理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git tag                     <span class="comment"># 查看标签</span></span><br><span class="line">git tag v1.0.0              <span class="comment"># 创建轻量标签</span></span><br><span class="line">git tag -a v1.0.0 -m <span class="string">&quot;描述&quot;</span>  <span class="comment"># 创建附注标签</span></span><br><span class="line">git push origin v1.0.0      <span class="comment"># 推送标签</span></span><br><span class="line">git push origin --tags      <span class="comment"># 推送所有标签</span></span><br><span class="line">git tag -d v1.0.0           <span class="comment"># 删除本地标签</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="十、Git-提价规范"><a href="#十、Git-提价规范" class="headerlink" title="十、Git 提价规范"></a>十、Git 提价规范</h2><h3 id="10-1-推荐格式"><a href="#10-1-推荐格式" class="headerlink" title="10.1 推荐格式"></a>10.1 推荐格式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="built_in">type</span>&gt;(&lt;scope&gt;): &lt;subject&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">&lt;footer&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-2-常用-Type"><a href="#10-2-常用-Type" class="headerlink" title="10.2 常用 Type"></a>10.2 常用 Type</h3><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>feat</td>
+<td>新功能</td>
+</tr>
+<tr>
+<td>fix</td>
+<td>修复 Bug</td>
+</tr>
+<tr>
+<td>docs</td>
+<td>文档更新</td>
+</tr>
+<tr>
+<td>style</td>
+<td>代码格式（不影响功能）</td>
+</tr>
+<tr>
+<td>refactor</td>
+<td>重构</td>
+</tr>
+<tr>
+<td>perf</td>
+<td>性能优化</td>
+</tr>
+<tr>
+<td>test</td>
+<td>测试相关</td>
+</tr>
+<tr>
+<td>chore</td>
+<td>构建&#x2F;工具变动</td>
+</tr>
+<tr>
+<td>revert</td>
+<td>回滚</td>
+</tr>
+</tbody></table>
+<h3 id="10-3-示例"><a href="#10-3-示例" class="headerlink" title="10.3 示例"></a>10.3 示例</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">&quot;feat: 添加用户登录功能&quot;</span></span><br><span class="line">git commit -m <span class="string">&quot;fix: 修复登录页面样式错乱&quot;</span></span><br><span class="line">git commit -m <span class="string">&quot;docs: 更新 README 安装说明&quot;</span></span><br><span class="line">git commit -m <span class="string">&quot;refactor: 重构用户模块代码结构&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>掌握这些 Git 命令，足以应对日常 90% 的开发场景。关键是要：</p>
+<ol>
+<li><strong>勤提交</strong>：小步提交，方便回溯</li>
+<li><strong>写规范</strong>：提交信息要清晰明了</li>
+<li><strong>多分支</strong>：善用分支隔离不同功能</li>
+<li><strong>常同步</strong>：保持与远程仓库的同步</li>
+</ol>
+<hr>
+<p><em>建议收藏本文，随时查阅</em></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://gongyeqi.top">宫野琦</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://gongyeqi.top/2026/06/18/git-commands-guide/">https://gongyeqi.top/2026/06/18/git-commands-guide/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://gongyeqi.top" target="_blank">宫野琦Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Git/">Git</a><a class="post-meta__tags" href="/tags/%E5%B7%A5%E5%85%B7/">工具</a><a class="post-meta__tags" href="/tags/%E6%95%88%E7%8E%87/">效率</a></div><div class="post-share"><div class="social-share" data-image="/img/background.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/06/18/markdown-writing-guide/" title="Markdown 写作完全指南 - 从入门到精通"><img class="cover" src="/img/background.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Markdown 写作完全指南 - 从入门到精通</div></div><div class="info-2"><div class="info-item-1">Markdown 写作完全指南 - 从入门到精通Markdown 是一种轻量级标记语言，被广泛应用于博客写作、文档编写、笔记记录等场景。本文带你从零掌握 Markdown 的全部语法。 一、基础语法1.1 标题123456# 一级标题## 二级标题### 三级标题#### 四级标题##### 五级标题###### 六级标题  效果： 一级标题二级标题三级标题 技巧：一级标题一般只用于文章标题，正文从二级标题开始。  1.2 文字样式12345**加粗文字***斜体文字****加粗斜体***~~删除线~~`行内代码`  效果： 加粗文字 | 斜体文字 | 加粗斜体 | 删除线 | 行内代码 1.3 段落与换行123456这是第一段。这是第二段（空一行形成新段落）这是同一段，换行不加空行（某些渲染器需要行尾加两个空格）  1.4 列表123456789101112131415161718# 无序列表- 项目一- 项目二  - 子项目 2.1  - 子项目 2.2- 项目三# 有序列表1. 第一步2. 第二步   1. 子步骤 2.1   2. 子步骤 2.23. 第三步# 任务列表-...</div></div></div></a><a class="pagination-related" href="/2026/06/18/butterfly-theme-customization/" title="Butterfly 主题美化与自定义配置指南"><img class="cover" src="/img/background.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Butterfly 主题美化与自定义配置指南</div></div><div class="info-2"><div class="info-item-1">Butterfly 主题美化与自定义配置指南Butterfly 是 Hexo 生态中最受欢迎的主题之一，功能强大且高度可定制。本文汇总了常用的美化配置，帮助你打造独一无二的博客。 一、基础外观配置1.1 导航栏美化在 _config.butterfly.yml 中配置导航栏： 12345678# 导航栏设置nav:  display_title: true       # 是否显示标题  hide_on_scroll: true      # 滚动时是否隐藏  auto_hide_showbutton:    enable: false    button: 早安    button_anymore: 好梦  1.2 头像与站点图标12345678910# 头像avatar:  img: /img/neko01.png  effect: false             # 头像旋转特效# 网站图标favicon: /img/favicon.ico# 主页大图index_img: /img/background.jpg  1.3 页面背景1234567891011# 不同页面的...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/06/18/markdown-writing-guide/" title="Markdown 写作完全指南 - 从入门到精通"><img class="cover" src="/img/background.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-18</div><div class="info-item-2">Markdown 写作完全指南 - 从入门到精通</div></div><div class="info-2"><div class="info-item-1">Markdown 写作完全指南 - 从入门到精通Markdown 是一种轻量级标记语言，被广泛应用于博客写作、文档编写、笔记记录等场景。本文带你从零掌握 Markdown 的全部语法。 一、基础语法1.1 标题123456# 一级标题## 二级标题### 三级标题#### 四级标题##### 五级标题###### 六级标题  效果： 一级标题二级标题三级标题 技巧：一级标题一般只用于文章标题，正文从二级标题开始。  1.2 文字样式12345**加粗文字***斜体文字****加粗斜体***~~删除线~~`行内代码`  效果： 加粗文字 | 斜体文字 | 加粗斜体 | 删除线 | 行内代码 1.3 段落与换行123456这是第一段。这是第二段（空一行形成新段落）这是同一段，换行不加空行（某些渲染器需要行尾加两个空格）  1.4 列表123456789101112131415161718# 无序列表- 项目一- 项目二  - 子项目 2.1  - 子项目 2.2- 项目三# 有序列表1. 第一步2. 第二步   1. 子步骤 2.1   2. 子步骤 2.23. 第三步# 任务列表-...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/neko01.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">宫野琦</div><div class="author-info-description">摸得浮生半日闲</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://blog.csdn.net/mjh1667002013" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=728831102&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fab fa-qq"></i></a><a class="social-icon" href="mailto:1976083684@qq.com" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Git-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-text">Git 常用命令速查与最佳实践</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE"><span class="toc-text">一、基础配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E8%AE%BE%E7%BD%AE%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF"><span class="toc-text">1.1 设置用户信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E6%9F%A5%E7%9C%8B%E9%85%8D%E7%BD%AE"><span class="toc-text">1.2 查看配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E9%85%8D%E7%BD%AE-SSH"><span class="toc-text">1.3 配置 SSH</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BB%93%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="toc-text">二、仓库操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%88%9B%E5%BB%BA%E4%BB%93%E5%BA%93"><span class="toc-text">2.1 创建仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E7%AE%A1%E7%90%86"><span class="toc-text">2.2 远程仓库管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B"><span class="toc-text">三、日常开发流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%9F%A5%E7%9C%8B%E7%8A%B6%E6%80%81"><span class="toc-text">3.1 查看状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E6%B7%BB%E5%8A%A0%E4%B8%8E%E6%8F%90%E4%BA%A4"><span class="toc-text">3.2 添加与提交</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%8E%A8%E9%80%81%E4%B8%8E%E6%8B%89%E5%8F%96"><span class="toc-text">3.3 推送与拉取</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86"><span class="toc-text">四、分支管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%88%86%E6%94%AF%E6%93%8D%E4%BD%9C"><span class="toc-text">4.1 分支操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%88%86%E6%94%AF%E5%90%88%E5%B9%B6"><span class="toc-text">4.2 分支合并</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%B8%B8%E7%94%A8%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="toc-text">五、常用工作流</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-Git-Flow-%E5%88%86%E6%94%AF%E7%AD%96%E7%95%A5"><span class="toc-text">5.1 Git Flow 分支策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-GitHub-Flow%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-text">5.2 GitHub Flow（推荐）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%92%A4%E9%94%80%E6%93%8D%E4%BD%9C"><span class="toc-text">六、撤销操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E6%92%A4%E9%94%80%E5%B7%A5%E4%BD%9C%E5%8C%BA%E4%BF%AE%E6%94%B9"><span class="toc-text">6.1 撤销工作区修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E6%92%A4%E9%94%80%E6%9A%82%E5%AD%98%E5%8C%BA"><span class="toc-text">6.2 撤销暂存区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E6%92%A4%E9%94%80%E6%8F%90%E4%BA%A4"><span class="toc-text">6.3 撤销提交</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%97%A5%E5%BF%97%E4%B8%8E%E5%8E%86%E5%8F%B2"><span class="toc-text">七、日志与历史</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E5%82%A8%E8%97%8F%E4%B8%8E%E6%B8%85%E7%90%86"><span class="toc-text">八、储藏与清理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86"><span class="toc-text">九、标签管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E3%80%81Git-%E6%8F%90%E4%BB%B7%E8%A7%84%E8%8C%83"><span class="toc-text">十、Git 提价规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#10-1-%E6%8E%A8%E8%8D%90%E6%A0%BC%E5%BC%8F"><span class="toc-text">10.1 推荐格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-2-%E5%B8%B8%E7%94%A8-Type"><span class="toc-text">10.2 常用 Type</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-3-%E7%A4%BA%E4%BE%8B"><span class="toc-text">10.3 示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/06/18/frontend-dev-setup/" title="前端开发环境搭建 - Node.js + VS Code + 必备插件"><img src="/img/background.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前端开发环境搭建 - Node.js + VS Code + 必备插件"/></a><div class="content"><a class="title" href="/2026/06/18/frontend-dev-setup/" title="前端开发环境搭建 - Node.js + VS Code + 必备插件">前端开发环境搭建 - Node.js + VS Code + 必备插件</a><time datetime="2026-06-18T05:00:00.000Z" title="发表于 2026-06-18 13:00:00">2026-06-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/18/markdown-writing-guide/" title="Markdown 写作完全指南 - 从入门到精通"><img src="/img/background.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Markdown 写作完全指南 - 从入门到精通"/></a><div class="content"><a class="title" href="/2026/06/18/markdown-writing-guide/" title="Markdown 写作完全指南 - 从入门到精通">Markdown 写作完全指南 - 从入门到精通</a><time datetime="2026-06-18T04:00:00.000Z" title="发表于 2026-06-18 12:00:00">2026-06-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/18/git-commands-guide/" title="Git 常用命令速查与最佳实践"><img src="/img/background.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Git 常用命令速查与最佳实践"/></a><div class="content"><a class="title" href="/2026/06/18/git-commands-guide/" title="Git 常用命令速查与最佳实践">Git 常用命令速查与最佳实践</a><time datetime="2026-06-18T03:00:00.000Z" title="发表于 2026-06-18 11:00:00">2026-06-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/06/18/butterfly-theme-customization/" title="Butterfly 主题美化与自定义配置指南"><img src="/img/background.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Butterfly 主题美化与自定义配置指南"/></a><div class="content"><a class="title" href="/2026/06/18/butterfly-theme-customization/" title="Butterfly 主题美化与自定义配置指南">Butterfly 主题美化与自定义配置指南</a><time datetime="2026-06-18T02:00:00.000Z" title="发表于 2026-06-18 10:00:00">2026-06-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/06/17/hexo-blog-tutorial/" title="从零开始搭建 Hexo 个人博客 - 详细入门教程">从零开始搭建 Hexo 个人博客 - 详细入门教程</a><time datetime="2026-06-17T08:00:00.000Z" title="发表于 2026-06-17 16:00:00">2026-06-17</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 宫野琦</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5"></script><script src="/js/main.js?v=5.5.5"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+  const getUtterancesTheme = theme => theme === 'dark' ? 'photon-dark' : 'github-light'
+
+  const loadUtterances = (el = document, key) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyUtterances = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const config = {
+      src: 'https://utteranc.es/client.js',
+      repo: 'limou2001/blog',
+      theme: getUtterancesTheme(document.documentElement.getAttribute('data-theme')),
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      'issue-term': isShuoshuo ? key : (option && option['issue-term']) || 'pathname'
+    }
+
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => ele.setAttribute(key, value))
+    el.querySelector('#utterances-wrap').appendChild(ele)
+  }
+
+  const changeUtterancesTheme = theme => {
+    const iframe = document.querySelector('#utterances-wrap iframe')
+    if (iframe) {
+      const message = {
+        type: 'set-theme',
+        theme: getUtterancesTheme(theme)
+      };
+      iframe.contentWindow.postMessage(message, 'https://utteranc.es')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeUtterancesTheme, 'utterances')
+
+  if (isShuoshuo) {
+    'Utterances' === 'Utterances'
+      ? window.shuoshuoComment = { loadComment: loadUtterances }
+      : window.loadOtherComment = loadUtterances
+    return
+  }
+  
+  if ('Utterances' === 'Utterances' || !false) {
+    if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+    else loadUtterances()
+  } else {
+    window.loadOtherComment = loadUtterances
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
