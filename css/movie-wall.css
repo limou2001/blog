@@ -161,3 +161,75 @@
 [data-theme="dark"] .movie-card:hover {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
+
+/* ===== 关于我 - 技能标签页 ===== */
+.skill-tabs {
+  text-align: center;
+}
+.skill-nav {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  margin: 0 0 16px 0;
+  list-style: none;
+  border: none;
+}
+.skill-tab button {
+  padding: 6px 18px;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  background: #fff;
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.skill-tab.active button {
+  background: #49b1f5;
+  color: #fff;
+  border-color: #49b1f5;
+}
+.skill-tab button:hover {
+  border-color: #49b1f5;
+  color: #49b1f5;
+}
+.skill-tab.active button:hover {
+  color: #fff;
+}
+.skill-pane {
+  display: none;
+}
+.skill-pane.active {
+  display: block;
+}
+.skill-tabs table {
+  width: 100%;
+  text-align: center;
+}
+.skill-tabs table td:first-child {
+  width: 80px;
+  font-weight: 600;
+  color: #888;
+}
+.skill-tabs table code {
+  background: #f0f6ff;
+  color: #49b1f5;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+[data-theme="dark"] .skill-tab button {
+  background: #1e1e1e;
+  border-color: #444;
+  color: #aaa;
+}
+[data-theme="dark"] .skill-tab.active button {
+  background: #49b1f5;
+  color: #fff;
+  border-color: #49b1f5;
+}
+[data-theme="dark"] .skill-tabs table code {
+  background: #1a2a3a;
+}
