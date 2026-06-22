@@ -1,0 +1,279 @@
+/* ==========================================
+   友链页面 - 翻转卡片
+   ========================================== */
+
+.my-flip-card {
+  width: 350px;
+  max-width: 90vw;
+  margin: 0 auto 40px;
+  perspective: 800px;
+  cursor: pointer;
+}
+
+.flip-inner {
+  position: relative;
+  width: 100%;
+  padding-bottom: 140%;
+  min-height: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flip-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-front,
+.flip-back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  border-radius: 16px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* --- 正面 --- */
+.flip-front {
+  background: url('/img/info_front.jpg') center/cover no-repeat;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  justify-content: flex-start;
+  padding-top: 20px;
+  gap: 8px;
+}
+
+.flip-front::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.18);
+  z-index: 0;
+}
+
+.flip-front .my-avatar,
+.flip-front .my-info-text {
+  position: relative;
+  z-index: 1;
+}
+
+.flip-front .copy-btn {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #2c3e50;
+  text-shadow: none;
+  padding: 10px 24px;
+  font-size: 0.85em;
+  border-radius: 22px;
+}
+
+.flip-front .copy-btn:hover {
+  background: #fff;
+  color: #1a1a2e;
+}
+
+.flip-front .my-info-text h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.5em;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.flip-front .my-info-text .my-desc {
+  margin: 0 0 5px 0;
+  font-size: 1.05em;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.flip-front .my-info-text .my-url {
+  margin: 0;
+  font-size: 1.05em;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* 卡片与下方友链的分隔 */
+.my-flip-card::after {
+  content: '';
+  display: block;
+  width: 60%;
+  max-width: 200px;
+  margin: 8px auto 0;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+
+/* 工具站点与友链之间的分隔线 */
+.container .flink .flink-list + .flink-list {
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border-color, #e0e0e0);
+}
+
+.flip-front .my-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+}
+
+.flip-front .my-info-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* --- 反面 --- */
+.flip-back {
+  background: url('/img/info_back.png') center/cover no-repeat;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding: 24px;
+  padding-bottom: 32px;
+  transform: rotateY(180deg);
+}
+
+.flip-back::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.25);
+  z-index: 0;
+}
+
+.flip-back .back-hint {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+}
+
+.flip-back .random-btn {
+  position: relative;
+  z-index: 1;
+  padding: 9px 24px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #2c3e50;
+  border: none;
+  border-radius: 22px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-shadow: none;
+}
+
+.flip-back .random-btn:hover {
+  background: #fff;
+  color: #1a1a2e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================
+   友链卡片悬停效果
+   ========================================== */
+
+.flink-list-item {
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  border-radius: 12px !important;
+}
+
+.flink-list-item:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
+}
+
+.flink-list-item img {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  border-radius: 50% !important;
+}
+
+.flink-list-item:hover img {
+  transform: scale(1.12) !important;
+}
+
+.flink-list-item .flink-item-name {
+  transition: color 0.3s;
+}
+
+.flink-list-item:hover .flink-item-name {
+  color: var(--theme-color, #49b1f5);
+}
+
+/* ==========================================
+   深色模式
+   ========================================== */
+
+[data-theme="dark"] .flip-front {
+  background: url('/img/info_front.jpg') center/cover no-repeat;
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .flip-front::before {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .flip-back {
+  background: linear-gradient(135deg, #1a1a26 0%, #222233 50%, #28283a 100%);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .flip-front .my-info-text h3 {
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .flip-front .my-info-text .my-desc {
+  color: #aaa;
+}
+
+[data-theme="dark"] .flip-front .my-info-text .my-url {
+  color: #888;
+}
+
+[data-theme="dark"] .copy-btn {
+  background: #e0e0e0;
+  color: #1a1a2e;
+}
+
+[data-theme="dark"] .copy-btn:hover {
+  background: #fff;
+}
+
+[data-theme="dark"] .flip-back .random-btn {
+  background: #e0e0e0;
+  color: #1a1a2e;
+}
+
+[data-theme="dark"] .flip-back .random-btn:hover {
+  background: #fff;
+}
+
+[data-theme="dark"] .flip-back .back-hint {
+  color: #aaa;
+}
+
+[data-theme="dark"] .flink-list-item:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
