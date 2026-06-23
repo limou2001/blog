@@ -275,7 +275,7 @@
             type: 'map',
             map: 'china',
             roam: false,
-            zoom: 1.2,
+            zoom: 1.5,
             center: [104.5, 36],
             label: {
               show: true,

@@ -350,7 +350,7 @@
   margin: 0 0 40px;
   background: var(--card-bg);
   border-radius: 16px;
-  padding: 24px 20px 20px;
+  padding: 16px 8px 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   opacity: 0;
   transform: translateY(20px);
@@ -392,9 +392,9 @@
 .china-map-container {
   position: relative;
   width: 100%;
-  max-width: 860px;
+  max-width: 1000px;
   margin: 0 auto;
-  height: 620px;
+  height: 700px;
 }
 
 /* ====== 地图加载骨架屏 ====== */
@@ -685,7 +685,7 @@
   }
 
   .china-map-container {
-    height: 420px;
+    height: 480px;
   }
 
   .china-map-svg .province-label-text,
