@@ -1,0 +1,798 @@
+/* ==========================================
+   相册瀑布流照片墙 - 通用样式
+   ========================================== */
+
+/* ====== 分类标题 ====== */
+.photo-category-header {
+  text-align: center;
+  margin: 0 0 40px;
+  padding: 20px 0 0;
+}
+
+.photo-category-title {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: var(--font-color);
+  margin: 0 0 8px;
+  letter-spacing: 2px;
+}
+
+.photo-category-desc {
+  font-size: 0.95em;
+  color: var(--font-color);
+  opacity: 0.6;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* ====== 统计栏 ====== */
+.photo-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 36px;
+  font-size: 0.85em;
+  color: var(--font-color);
+  opacity: 0.5;
+}
+
+.photo-stats span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ====== 瀑布流容器 ====== */
+.photo-waterfall {
+  column-count: 3;
+  column-gap: 18px;
+  padding: 0 4px;
+}
+
+@media screen and (max-width: 900px) {
+  .photo-waterfall {
+    column-count: 2;
+    column-gap: 14px;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .photo-waterfall {
+    column-count: 1;
+    column-gap: 0;
+  }
+}
+
+/* ====== 照片卡片 ====== */
+.photo-card {
+  break-inside: avoid;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--card-bg);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.35s ease;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: photoFadeInUp 0.6s ease forwards;
+  will-change: transform, opacity;
+}
+
+.photo-card:nth-child(1) { animation-delay: 0.05s; }
+.photo-card:nth-child(2) { animation-delay: 0.1s; }
+.photo-card:nth-child(3) { animation-delay: 0.15s; }
+.photo-card:nth-child(4) { animation-delay: 0.2s; }
+.photo-card:nth-child(5) { animation-delay: 0.25s; }
+.photo-card:nth-child(6) { animation-delay: 0.3s; }
+.photo-card:nth-child(7) { animation-delay: 0.35s; }
+.photo-card:nth-child(8) { animation-delay: 0.4s; }
+.photo-card:nth-child(9) { animation-delay: 0.45s; }
+.photo-card:nth-child(10) { animation-delay: 0.5s; }
+.photo-card:nth-child(11) { animation-delay: 0.55s; }
+.photo-card:nth-child(12) { animation-delay: 0.6s; }
+
+.photo-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+}
+
+@keyframes photoFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ====== 图片容器 ====== */
+.photo-card-img {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #e8e8e8;
+}
+
+.photo-card-img img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              filter 0.55s ease;
+}
+
+.photo-card:hover .photo-card-img img {
+  transform: scale(1.06);
+  filter: brightness(1.05);
+}
+
+/* 悬浮遮罩图标 */
+.photo-card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.4s ease;
+  pointer-events: none;
+}
+
+.photo-card:hover .photo-card-overlay {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.photo-card-overlay-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.photo-card:hover .photo-card-overlay-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.photo-card-overlay-icon svg {
+  width: 22px;
+  height: 22px;
+  color: #333;
+}
+
+/* ====== 描述区域 ====== */
+.photo-card-desc {
+  padding: 12px 14px 14px;
+  min-height: 20px;
+}
+
+.photo-card-desc .desc-text {
+  display: block;
+  font-size: 0.85em;
+  color: var(--font-color);
+  opacity: 0.7;
+  line-height: 1.5;
+  margin: 0;
+  transition: opacity 0.3s ease;
+}
+
+.photo-card:hover .photo-card-desc .desc-text {
+  opacity: 0.9;
+}
+
+.photo-card-desc .desc-placeholder {
+  display: block;
+  font-size: 0.8em;
+  color: var(--font-color);
+  opacity: 0.3;
+  font-style: italic;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ====== 空状态引导 ====== */
+.photo-empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--font-color);
+  opacity: 0.5;
+}
+
+.photo-empty-state .empty-icon {
+  font-size: 4em;
+  margin-bottom: 16px;
+  display: block;
+  animation: emptyFloat 3s ease-in-out infinite;
+}
+
+@keyframes emptyFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.photo-empty-state .empty-title {
+  font-size: 1.3em;
+  font-weight: 600;
+  margin: 0 0 8px;
+  opacity: 0.7;
+}
+
+.photo-empty-state .empty-hint {
+  font-size: 0.9em;
+  margin: 0;
+  opacity: 0.5;
+  line-height: 1.6;
+}
+
+/* ====== 大图预览弹窗自定义 ====== */
+.fancybox__container {
+  --fancybox-bg: rgba(0, 0, 0, 0.92);
+}
+
+.fancybox__toolbar {
+  --f-button-bg: rgba(0, 0, 0, 0.4);
+  --f-button-hover-bg: rgba(0, 0, 0, 0.6);
+  --f-button-border-radius: 8px;
+}
+
+.fancybox__caption {
+  text-align: center;
+  font-size: 0.9em;
+  padding: 12px 20px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ====== 分类差异化 ====== */
+
+/* 旅行风景 - 蓝绿色调 */
+.photo-wall-travel .photo-category-title {
+  border-bottom: 3px solid #5bae9e;
+  display: inline-block;
+  padding-bottom: 6px;
+}
+
+.photo-wall-travel .photo-card {
+  border-radius: 14px;
+}
+
+.photo-wall-travel .photo-card:hover {
+  box-shadow: 0 16px 36px rgba(91, 174, 158, 0.2);
+}
+
+/* 生活点滴 - 暖橙色调 */
+.photo-wall-life .photo-category-title {
+  border-bottom: 3px solid #f0a058;
+  display: inline-block;
+  padding-bottom: 6px;
+}
+
+.photo-wall-life .photo-card {
+  border-radius: 12px;
+}
+
+.photo-wall-life .photo-card:hover {
+  box-shadow: 0 16px 36px rgba(240, 160, 88, 0.2);
+}
+
+/* 美食记录 - 暖红色调 */
+.photo-wall-food .photo-category-title {
+  border-bottom: 3px solid #e87461;
+  display: inline-block;
+  padding-bottom: 6px;
+}
+
+.photo-wall-food .photo-card {
+  border-radius: 16px;
+}
+
+.photo-wall-food .photo-card:hover {
+  box-shadow: 0 16px 36px rgba(232, 116, 97, 0.2);
+}
+
+/* ====== 滚动渐显增强 ====== */
+@media (prefers-reduced-motion: no-preference) {
+  .photo-card {
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+}
+
+/* ====== 加载骨架屏 ====== */
+.photo-loading-skeleton {
+  break-inside: avoid;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--card-bg);
+}
+
+.photo-loading-skeleton .skeleton-img {
+  width: 100%;
+  padding-bottom: 75%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+}
+
+.photo-loading-skeleton .skeleton-text {
+  height: 16px;
+  margin: 12px 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ==========================================
+   中国地图热力图 - 旅行风景专属
+   ========================================== */
+
+/* ====== 地图容器 ====== */
+.china-map-wrapper {
+  position: relative;
+  margin: 0 0 40px;
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 24px 20px 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: mapFadeIn 0.7s ease 0.15s forwards;
+}
+
+@keyframes mapFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.china-map-title {
+  text-align: center;
+  font-size: 1.05em;
+  font-weight: 600;
+  color: var(--font-color);
+  margin: 0 0 4px;
+  letter-spacing: 1px;
+}
+
+.china-map-subtitle {
+  text-align: center;
+  font-size: 0.8em;
+  color: var(--font-color);
+  opacity: 0.45;
+  margin: 0 0 16px;
+}
+
+.china-map-svg {
+  display: block;
+  width: 100%;
+  max-width: 860px;
+  height: auto;
+  margin: 0 auto;
+  cursor: default;
+}
+
+/* ====== 地图容器（ECharts） ====== */
+.china-map-container {
+  position: relative;
+  width: 100%;
+  max-width: 860px;
+  height: 620px;
+  margin: 0 auto;
+}
+
+.china-map-container .china-map-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ====== 地图加载失败兜底 ====== */
+.china-map-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #999;
+  font-size: 15px;
+  text-align: center;
+}
+
+/* ====== 省份名称标签覆盖层（已废弃，保留兼容） ====== */
+.china-map-labels {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.china-map-labels .province-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 11px;
+  color: #555;
+  font-weight: 500;
+  opacity: 0.65;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ====== 省份路径基础样式 ====== */
+.china-map-svg .province-path {
+  fill: #e8edf2;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  transition: fill 0.45s ease, transform 0.3s ease, filter 0.3s ease;
+  cursor: pointer;
+  vector-effect: non-scaling-stroke;
+}
+
+.china-map-svg .province-path:hover {
+  filter: brightness(0.88) drop-shadow(0 2px 6px rgba(0,0,0,0.15));
+  transform-origin: center;
+}
+
+/* 有照片省份悬浮 */
+.china-map-svg .province-path.has-photos:hover {
+  filter: brightness(0.82) drop-shadow(0 3px 8px rgba(0,0,0,0.2));
+}
+
+/* 无照片省份悬浮 */
+.china-map-svg .province-path.no-photos:hover {
+  filter: brightness(0.92);
+  stroke: #c0c0c0;
+  stroke-width: 2;
+}
+
+/* 选中高亮 */
+.china-map-svg .province-path.active {
+  stroke: #2d7d6f;
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 8px rgba(45, 125, 111, 0.4));
+}
+
+/* ====== 省份标签（旧 SVG text 兼容） ====== */
+.china-map-svg .province-label-text {
+  font-size: 10px;
+  fill: #333;
+  text-anchor: middle;
+  pointer-events: none;
+  font-weight: 500;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+/* ====== 图例 ====== */
+.china-map-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 16px;
+  font-size: 0.75em;
+  color: var(--font-color);
+  opacity: 0.55;
+  flex-wrap: wrap;
+}
+
+.china-map-legend .legend-label {
+  margin: 0 4px;
+}
+
+.china-map-legend .legend-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  gap: 1px;
+}
+
+.china-map-legend .legend-bar span {
+  width: 28px;
+  height: 100%;
+  display: block;
+}
+
+/* ====== 筛选栏 ====== */
+.photo-filter-bar {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 12px 20px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  animation: filterSlideIn 0.4s ease;
+}
+
+.photo-filter-bar.visible {
+  display: flex;
+}
+
+@keyframes filterSlideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.photo-filter-bar .filter-label {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #5bae9e;
+}
+
+.photo-filter-bar .filter-count {
+  font-size: 0.8em;
+  color: var(--font-color);
+  opacity: 0.5;
+}
+
+.photo-filter-bar .filter-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 14px;
+  background: #5bae9e;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.photo-filter-bar .filter-clear:hover {
+  background: #3d8b7d;
+  transform: scale(1.04);
+}
+
+/* ====== 卡片隐藏动画 ====== */
+.photo-card.filtered-out {
+  display: none;
+}
+
+.photo-card.filtered-in {
+  display: block;
+}
+
+/* ====== 无省份匹配引导弹窗 ====== */
+.map-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 32px 28px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  max-width: 360px;
+  width: 90%;
+}
+
+.map-toast.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.map-toast .toast-icon {
+  font-size: 2.5em;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.map-toast .toast-title {
+  font-size: 1.15em;
+  font-weight: 600;
+  color: var(--font-color);
+  margin: 0 0 8px;
+}
+
+.map-toast .toast-desc {
+  font-size: 0.85em;
+  color: var(--font-color);
+  opacity: 0.55;
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.map-toast .toast-close {
+  padding: 8px 28px;
+  background: #5bae9e;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.map-toast .toast-close:hover {
+  background: #3d8b7d;
+}
+
+.map-toast-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 9998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.map-toast-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ====== 响应式微调 ====== */
+@media screen and (max-width: 768px) {
+  .china-map-wrapper {
+    padding: 16px 8px 12px;
+    border-radius: 12px;
+  }
+
+  .china-map-container {
+    height: 420px;
+  }
+
+  .china-map-svg .province-label-text,
+  .china-map-labels .province-label {
+    font-size: 8px;
+  }
+
+  .china-map-legend {
+    font-size: 0.7em;
+    gap: 4px;
+  }
+
+  .china-map-legend .legend-bar span {
+    width: 20px;
+  }
+
+  .photo-category-title {
+    font-size: 1.5em;
+  }
+
+  .photo-stats {
+    gap: 20px;
+    font-size: 0.8em;
+  }
+
+  .photo-card-desc {
+    padding: 10px 12px 12px;
+  }
+}
+
+/* ==========================================
+   相册首页 - 最近照片网格
+   ========================================== */
+
+/* ====== 加载中占位 ====== */
+.gallery-loading {
+  text-align: center;
+  color: var(--font-color);
+  opacity: 0.4;
+  padding: 40px 0;
+  font-size: 0.9em;
+}
+
+/* ====== 最近照片网格 ====== */
+.recent-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 0 0 32px;
+}
+
+.recent-photos-grid a {
+  display: block;
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.recent-photo-item {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--card-bg);
+}
+
+.recent-photo-item img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.recent-photo-item:hover img {
+  transform: scale(1.06);
+  filter: brightness(0.75);
+}
+
+/* ====== 分类标签覆盖层 ====== */
+.recent-photo-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32px 12px 12px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.55));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.recent-photo-item:hover .recent-photo-overlay {
+  opacity: 1;
+}
+
+.recent-photo-cat {
+  display: inline-block;
+  padding: 3px 10px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 0.75em;
+  border-radius: 12px;
+  letter-spacing: 1px;
+}
+
+/* ====== 空状态 ====== */
+.recent-photos-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--font-color);
+  opacity: 0.4;
+  padding: 40px 0;
+  font-size: 0.95em;
+}
+
+/* ====== 响应式 ====== */
+@media screen and (max-width: 768px) {
+  .recent-photos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .recent-photos-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+}
