@@ -393,8 +393,31 @@
   position: relative;
   width: 100%;
   max-width: 860px;
-  height: 620px;
   margin: 0 auto;
+  height: 620px;
+}
+
+/* ====== 地图加载骨架屏 ====== */
+.china-map-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(110deg, #f0f0f0 30%, #f8f8f8 50%, #f0f0f0 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 12px;
+}
+
+.china-map-loading::after {
+  content: '🗺️ 地图加载中...';
+  font-size: 0.9em;
+  color: #999;
+  letter-spacing: 1px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .china-map-container .china-map-svg {

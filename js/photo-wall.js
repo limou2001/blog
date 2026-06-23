@@ -231,12 +231,23 @@
     // 加载 GeoJSON 并初始化 ECharts
     var activeProvince = null
 
-    fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json')
+    // 显示加载动画
+    chartDom.classList.add('china-map-loading')
+
+    // 使用本地 GeoJSON（已下载到 source/data/china.json，同域加载更快）
+    fetch('/data/china.json')
       .then(function (resp) { return resp.json() })
       .then(function (geoJson) {
+        chartDom.classList.remove('china-map-loading')
         echarts.registerMap('china', geoJson)
 
         var chart = echarts.init(chartDom)
+        chart.showLoading({
+          text: '地图加载中...',
+          color: '#5bae9e',
+          maskColor: 'rgba(255,255,255,0.7)',
+          fontSize: 14
+        })
 
         var option = {
           tooltip: {
@@ -298,6 +309,7 @@
         }
 
         chart.setOption(option)
+        chart.hideLoading()
 
         // 省份点击事件
         chart.on('click', function (params) {
@@ -334,10 +346,10 @@
         chartDom._echartInstance = chart
       })
       .catch(function () {
-        // 加载失败时显示提示
+        chartDom.classList.remove('china-map-loading')
         var fallback = document.createElement('div')
         fallback.className = 'china-map-fallback'
-        fallback.innerHTML = '<p>🗺️ 地图加载中，请刷新页面重试</p><p style="font-size:13px;color:#999;">若持续无法加载，请检查网络连接</p>'
+        fallback.innerHTML = '<p>🗺️ 地图加载失败</p><p style="font-size:13px;color:#999;">请检查网络连接后刷新重试</p>'
         chartDom.appendChild(fallback)
       })
   }
