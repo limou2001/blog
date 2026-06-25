@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>背单词 - 艾宾浩斯记忆法</title>
+  <link rel="stylesheet" href="css/vocab.css">
+</head>
+<body>
+  <!-- 词库加载进度层 -->
+  <div class="load-overlay" id="loadOverlay">
+    <div class="load-box">
+      <div class="load-spinner"></div>
+      <p class="load-text" id="loadText">正在加载词库...</p>
+      <div class="load-bar-track">
+        <div class="load-bar-fill" id="loadBar"></div>
+      </div>
+      <p class="load-detail" id="loadDetail"></p>
+    </div>
+  </div>
+
+  <div class="vocab-app">
+    <!-- 侧边栏 -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1 class="logo">📖 背单词</h1>
+        <p class="logo-sub">艾宾浩斯记忆法</p>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-page="learn">
+          <span class="nav-icon">📝</span> 学习新词
+          <span class="nav-badge" id="newWordBadge">0</span>
+        </a>
+        <a href="#" class="nav-item" data-page="review">
+          <span class="nav-icon">🔄</span> 今日复习
+          <span class="nav-badge" id="reviewBadge">0</span>
+        </a>
+        <a href="#" class="nav-item" data-page="books">
+          <span class="nav-icon">📚</span> 词库
+        </a>
+        <a href="#" class="nav-item" data-page="stats">
+          <span class="nav-icon">📊</span> 学习统计
+        </a>
+        <a href="#" class="nav-item" data-page="settings">
+          <span class="nav-icon">⚙️</span> 设置
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p id="bookInfo">词库：CET-4</p>
+        <p id="progressInfo">已学：0 / 7508</p>
+        <a href="/" class="back-home-link">🏠 回到宫野琦的小站 🍉</a>
+      </div>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+      <!-- 学习新词页面 -->
+      <section class="page active" id="page-learn">
+        <div class="learn-container" id="learnContainer">
+          <div class="learn-empty" id="learnEmpty">
+            <div class="empty-icon">🎯</div>
+            <h2>准备开始学习</h2>
+            <p>点击下方按钮开始今天的单词学习</p>
+            <button class="btn btn-primary btn-lg" id="btnStartLearn">开始学习</button>
+          </div>
+
+          <div class="learn-card" id="learnCard" style="display:none;">
+            <div class="card-header">
+              <div class="card-progress">
+                <span id="cardProgress">第 1/20 个</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" id="progressFill" style="width:0%"></div>
+                </div>
+              </div>
+              <span class="card-badge" id="cardBadge">新词</span>
+            </div>
+
+            <div class="card-body">
+              <div class="card-word-area">
+                <div class="card-word" id="cardWord">--</div>
+                <div class="card-phonetic" id="cardPhonetic">--</div>
+                <button class="btn btn-speaker" id="btnSpeaker" title="发音">🔊</button>
+              </div>
+              <div class="card-detail-area">
+                <div class="card-section">
+                  <div class="section-title">释义</div>
+                  <div class="card-meaning" id="cardMeaning">--</div>
+                </div>
+
+                <div class="card-section">
+                  <div class="section-title">例句</div>
+                  <div class="card-sentence" id="cardSentence">--</div>
+                  <div class="card-sentence-cn" id="cardSentenceCn">--</div>
+                </div>
+
+                <div class="card-section" id="cardMnemonicSection" style="display:none;">
+                  <div class="section-title">💡 记忆技巧</div>
+                  <div class="card-mnemonic" id="cardMnemonic">--</div>
+                </div>
+
+                <div class="card-section" id="cardSynoSection" style="display:none;">
+                  <div class="section-title">同近义词</div>
+                  <div class="card-syno" id="cardSyno">--</div>
+                </div>
+
+                <div class="card-section" id="cardPhraseSection" style="display:none;">
+                  <div class="section-title">常用短语</div>
+                  <div class="card-phrase" id="cardPhrase">--</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              <button class="btn btn-nav" id="btnPrevWord" title="上一个">◀ 上一个</button>
+              <button class="btn btn-outline" id="btnForgot">😕 没记住</button>
+              <button class="btn btn-primary" id="btnRemember">✅ 记住了</button>
+              <button class="btn btn-nav" id="btnNextWord" title="下一个">下一个 ▶</button>
+            </div>
+          </div>
+
+          <div class="learn-complete" id="learnComplete" style="display:none;">
+            <div class="complete-icon">🎉</div>
+            <h2>今日学习完成！</h2>
+            <p id="completeSummary"></p>
+            <div class="complete-actions">
+              <button class="btn btn-primary" id="btnContinueLearn">📖 继续学习新词</button>
+              <button class="btn btn-primary" id="btnLearnToReview">📝 复习今日所学单词</button>
+              <button class="btn btn-outline" id="btnBackToLearn">返回</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 复习页面 -->
+      <section class="page" id="page-review">
+        <div class="review-container" id="reviewContainer">
+          <!-- 复习选项卡 -->
+          <div class="review-tabs">
+            <button class="review-tab active" data-tab="today">📝 今日单词</button>
+            <button class="review-tab" data-tab="ebbinghaus">🔄 艾宾浩斯复习</button>
+            <button class="review-tab" data-tab="summary">📋 今日汇总</button>
+          </div>
+
+          <!-- 今日单词面板 -->
+          <div class="review-panel active" id="panel-today">
+            <div class="review-mode-toggle">
+              <button class="mode-btn active" data-mode="review">👁️ 复习模式</button>
+              <button class="mode-btn" data-mode="spell">✍️ 拼写模式</button>
+            </div>
+
+            <div class="learn-empty" id="todayEmpty">
+              <div class="empty-icon">📝</div>
+              <h2>暂无今日单词</h2>
+              <p id="todayEmptyHint">先去学习新词，再来这里复习和拼写吧！</p>
+            </div>
+
+            <div class="learn-card" id="todayCard" style="display:none;">
+              <!-- 复习模式 -->
+              <div class="card-body" id="todayReviewBody">
+                <div class="card-word-area">
+                  <div class="card-word" id="todayWord">--</div>
+                  <div class="card-phonetic" id="todayPhonetic">--</div>
+                  <button class="btn btn-speaker" id="btnTodaySpeaker" title="发音">🔊</button>
+                </div>
+                <div class="card-detail-area">
+                  <div class="card-section">
+                    <div class="section-title">释义</div>
+                    <div class="card-meaning" id="todayMeaning" style="display:none;">--</div>
+                    <button class="btn btn-text" id="btnTodayShowMeaning">👁️ 点击显示释义</button>
+                  </div>
+                  <div class="card-section" id="todaySentenceSection" style="display:none;">
+                    <div class="section-title">例句</div>
+                    <div class="card-sentence" id="todaySentence">--</div>
+                    <div class="card-sentence-cn" id="todaySentenceCn">--</div>
+                  </div>
+                  <div class="card-section" id="todayMnemonicSection" style="display:none;">
+                    <div class="section-title">💡 记忆技巧</div>
+                    <div class="card-mnemonic" id="todayMnemonic">--</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 拼写模式 -->
+              <div class="card-body" id="todaySpellBody" style="display:none;">
+                <div class="spell-area">
+                  <div class="spell-phonetic-row">
+                    <div class="spell-phonetic" id="spellPhonetic">--</div>
+                    <button class="btn-eye" id="btnTogglePhonetic" title="显示音标">👁️</button>
+                  </div>
+                  <div class="spell-meaning" id="spellMeaning">--</div>
+                  <div class="spell-input-wrap">
+                    <input type="text" class="spell-input" id="spellInput" placeholder="输入英文单词..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                    <button class="btn btn-primary" id="btnSpellCheck">检查</button>
+                  </div>
+                  <div class="spell-hint" id="spellHint"></div>
+                  <div class="spell-feedback" id="spellFeedback"></div>
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <button class="btn btn-nav" id="btnTodayPrev" title="上一个">◀ 上一个</button>
+                <button class="btn btn-outline" id="btnTodayForgot">😕 没记住</button>
+                <button class="btn btn-primary" id="btnTodayRemember">✅ 记住了</button>
+                <button class="btn btn-nav" id="btnTodayNext" title="下一个">下一个 ▶</button>
+              </div>
+            </div>
+
+            <div class="learn-complete" id="todayComplete" style="display:none;">
+              <div class="complete-icon">🎉</div>
+              <h2>今日单词复习完成！</h2>
+              <p id="todayCompleteSummary"></p>
+              <div class="complete-actions">
+                <button class="btn btn-primary" id="btnContinueReview">🔄 继续复习</button>
+                <button class="btn btn-outline" id="btnBackToToday">返回</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 艾宾浩斯复习面板 -->
+          <div class="review-panel" id="panel-ebbinghaus">
+            <div class="learn-empty" id="reviewEmpty">
+              <div class="empty-icon">📚</div>
+              <h2>暂无需要复习的单词</h2>
+              <p id="reviewEmptyHint">学习新单词后，系统会根据艾宾浩斯遗忘曲线自动安排复习</p>
+            </div>
+
+            <div class="learn-card" id="reviewCard" style="display:none;">
+              <div class="card-header">
+                <div class="card-progress">
+                  <span id="reviewProgress">第 1/5 个</span>
+                  <div class="progress-bar">
+                    <div class="progress-fill" id="reviewProgressFill" style="width:0%"></div>
+                  </div>
+                </div>
+                <span class="card-badge review-badge" id="reviewBadgeLabel">复习</span>
+              </div>
+
+              <div class="card-body">
+                <div class="card-word-area">
+                  <div class="card-word" id="reviewWord">--</div>
+                  <div class="card-phonetic" id="reviewPhonetic">--</div>
+                  <button class="btn btn-speaker" id="btnReviewSpeaker" title="发音">🔊</button>
+                </div>
+                <div class="card-detail-area">
+                  <div class="card-section">
+                    <div class="section-title">释义</div>
+                    <div class="card-meaning" id="reviewMeaning" style="display:none;">--</div>
+                    <button class="btn btn-text" id="btnShowMeaning">👁️ 点击显示释义</button>
+                  </div>
+                  <div class="card-section" id="reviewSentenceSection" style="display:none;">
+                    <div class="section-title">例句</div>
+                    <div class="card-sentence" id="reviewSentence">--</div>
+                    <div class="card-sentence-cn" id="reviewSentenceCn">--</div>
+                  </div>
+                  <div class="card-section" id="reviewMnemonicSection" style="display:none;">
+                    <div class="section-title">💡 记忆技巧</div>
+                    <div class="card-mnemonic" id="reviewMnemonic">--</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <button class="btn btn-outline" id="btnReviewForgot">😕 没记住</button>
+                <button class="btn btn-primary" id="btnReviewRemember">✅ 记住了</button>
+              </div>
+            </div>
+
+            <div class="learn-complete" id="reviewComplete" style="display:none;">
+              <div class="complete-icon">🌟</div>
+              <h2>复习完成！</h2>
+              <p id="reviewCompleteSummary"></p>
+              <button class="btn btn-primary" id="btnBackToReview">返回</button>
+            </div>
+          </div>
+
+          <!-- 今日汇总面板 -->
+          <div class="review-panel" id="panel-summary">
+            <div class="learn-empty" id="summaryEmpty">
+              <div class="empty-icon">📋</div>
+              <h2>暂无今日学习记录</h2>
+              <p>先去学习新词，这里会汇总今天学过的所有单词</p>
+            </div>
+            <div class="summary-table-wrap" id="summaryTableWrap" style="display:none;">
+              <table class="summary-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>单词</th>
+                    <th>音标</th>
+                    <th>释义</th>
+                    <th>例句</th>
+                  </tr>
+                </thead>
+                <tbody id="summaryTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 词库选择页面 -->
+      <section class="page" id="page-books">
+        <div class="books-container">
+          <h2>📚 选择词库</h2>
+          <p class="books-desc">选择一个词库开始学习，所有学习进度按词库独立保存</p>
+          <div class="book-grid" id="bookGrid">
+            <!-- 动态生成 -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 统计页面 -->
+      <section class="page" id="page-stats">
+        <div class="stats-container">
+          <h2>📊 学习统计</h2>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value" id="statTotal">0</div>
+              <div class="stat-label">累计学习单词</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statMastered">0</div>
+              <div class="stat-label">已掌握</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statReviewing">0</div>
+              <div class="stat-label">复习中</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statStreak">0</div>
+              <div class="stat-label">连续打卡(天)</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statTodayNew">0</div>
+              <div class="stat-label">今日新学</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statTodayReview">0</div>
+              <div class="stat-label">今日复习</div>
+            </div>
+          </div>
+
+          <div class="stats-section">
+            <h3>近7天学习记录</h3>
+            <div class="chart-legend">
+              <span class="legend-item"><span class="legend-dot new-dot"></span> 新学单词</span>
+              <span class="legend-item"><span class="legend-dot review-dot"></span> 复习单词</span>
+            </div>
+            <div class="week-chart" id="weekChart"></div>
+          </div>
+
+          <div class="stats-section">
+            <h3>复习阶段分布</h3>
+            <div class="stage-list" id="stageList"></div>
+          </div>
+
+          <div class="stats-section">
+            <h3>学习进度</h3>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-label">
+                <span>词库总单词：<b id="statBookTotal">0</b></span>
+                <span>已学：<b id="statBookPercent">0%</b></span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="statBookFill" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 设置页面 -->
+      <section class="page" id="page-settings">
+        <div class="settings-container">
+          <h2>⚙️ 设置</h2>
+
+          <div class="setting-group">
+            <h3>每日学习</h3>
+            <div class="setting-item">
+              <label>每日新词数量</label>
+              <div class="setting-control">
+                <button class="btn btn-sm" id="btnDecDaily">−</button>
+                <span class="setting-value" id="dailyCount">20</span>
+                <button class="btn btn-sm" id="btnIncDaily">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <h3>艾宾浩斯复习间隔</h3>
+            <p class="setting-desc">学习后第 N 天自动复习</p>
+            <div class="setting-item">
+              <label>复习间隔（天）</label>
+              <div class="interval-tags" id="intervalTags">
+                <!-- 动态生成 -->
+              </div>
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <h3>数据管理</h3>
+            <div class="setting-item">
+              <button class="btn btn-danger" id="btnResetProgress">🔄 重置学习进度</button>
+            </div>
+            <div class="setting-item">
+              <button class="btn btn-outline" id="btnExportData">📥 导出学习数据</button>
+            </div>
+            <div class="setting-item">
+              <button class="btn btn-outline" id="btnImportData">📤 导入学习数据</button>
+              <input type="file" id="importFileInput" accept=".json" style="display:none;">
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <h3>关于</h3>
+            <p class="setting-desc">
+              基于艾宾浩斯遗忘曲线（Ebbinghaus Forgetting Curve）设计，
+              在遗忘临界点自动提醒复习，最大化记忆效率。
+            </p>
+            <p class="setting-desc" id="aboutBookInfo">当前词库：CET-4 四级词汇（约 7500 词）</p>
+            <p class="setting-desc">数据全部存储在浏览器本地，不上传任何信息。</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Toast 提示 -->
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script src="js/vocab-app.js"></script>
+</body>
+</html>
