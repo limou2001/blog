@@ -143,6 +143,26 @@
   }
 
   /* ==========================================
+     动态加载 ECharts（仅在旅行风景页需要时加载）
+     ========================================== */
+  function loadECharts(callback) {
+    var script = document.createElement('script')
+    script.src = 'https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js'
+    script.onload = callback
+    script.onerror = function () {
+      var chartDom = document.getElementById('china-map-chart')
+      if (chartDom) {
+        chartDom.classList.remove('china-map-loading')
+        var fallback = document.createElement('div')
+        fallback.className = 'china-map-fallback'
+        fallback.innerHTML = '<p>🗺️ 地图加载失败</p><p style="font-size:13px;color:#999;">请检查网络连接后刷新重试</p>'
+        chartDom.appendChild(fallback)
+      }
+    }
+    document.head.appendChild(script)
+  }
+
+  /* ==========================================
      中国地图热力图 (ECharts)
      ========================================== */
   function initChinaMap() {
@@ -155,6 +175,19 @@
     var waterfall = document.getElementById('travel-waterfall')
     if (!waterfall) return
 
+    // 按需动态加载 ECharts（仅旅行风景页会触发）
+    if (typeof echarts === 'undefined') {
+      chartDom.classList.add('china-map-loading')
+      loadECharts(function () {
+        initChinaMapCore(chartDom, waterfall)
+      })
+      return
+    }
+
+    initChinaMapCore(chartDom, waterfall)
+  }
+
+  function initChinaMapCore(chartDom, waterfall) {
     // 收集各省份照片数量
     var provinceCount = {}
     var allCards = waterfall.querySelectorAll('.photo-card')
@@ -207,13 +240,6 @@
     // 热力色阶
     var heatColors = ['#e8edf2', '#c8e0d6', '#a8d4c0', '#88c8aa', '#68bc94', '#48b07e', '#2d8a6e']
 
-    function getHeatColor(count) {
-      if (!count || count === 0) return heatColors[0]
-      var ratio = maxCount > 0 ? count / maxCount : 0
-      var idx = Math.min(Math.floor(ratio * (heatColors.length - 1)), heatColors.length - 1)
-      return heatColors[idx]
-    }
-
     // 构建 ECharts 数据
     var mapData = []
     Object.keys(nameToCode).forEach(function (name) {
@@ -230,9 +256,6 @@
 
     // 加载 GeoJSON 并初始化 ECharts
     var activeProvince = null
-
-    // 显示加载动画
-    chartDom.classList.add('china-map-loading')
 
     // 使用本地 GeoJSON（已下载到 source/data/china.json，同域加载更快）
     fetch('/data/china.json')
