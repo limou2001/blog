@@ -388,13 +388,13 @@
   cursor: default;
 }
 
-/* ====== 地图容器（ECharts） ====== */
+/* ====== 地图容器 ====== */
 .china-map-container {
   position: relative;
   width: 100%;
-  max-width: 1000px;
+  max-width: 860px;
   margin: 0 auto;
-  height: 700px;
+  min-height: 200px;
 }
 
 /* ====== 地图加载骨架屏 ====== */
@@ -424,6 +424,23 @@
   display: block;
   width: 100%;
   height: auto;
+}
+
+/* ====== 地图 Tooltip ====== */
+.china-map-tooltip {
+  position: absolute;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 13px;
+  color: #333;
+  pointer-events: none;
+  z-index: 100;
+  line-height: 1.5;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  transition: opacity 0.15s ease;
 }
 
 /* ====== 地图加载失败兜底 ====== */
@@ -463,7 +480,6 @@
 
 /* ====== 省份路径基础样式 ====== */
 .china-map-svg .province-path {
-  fill: #e8edf2;
   stroke: #ffffff;
   stroke-width: 1.5;
   stroke-linejoin: round;
@@ -491,9 +507,7 @@
 
 /* 选中高亮 */
 .china-map-svg .province-path.active {
-  stroke: #2d7d6f;
-  stroke-width: 2.5;
-  filter: drop-shadow(0 0 8px rgba(45, 125, 111, 0.4));
+  fill: #49B1F5 !important;
 }
 
 /* ====== 省份标签（旧 SVG text 兼容） ====== */
@@ -685,7 +699,7 @@
   }
 
   .china-map-container {
-    height: 480px;
+    min-height: 160px;
   }
 
   .china-map-svg .province-label-text,

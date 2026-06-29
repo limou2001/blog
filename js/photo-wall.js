@@ -143,28 +143,10 @@
   }
 
   /* ==========================================
-     动态加载 ECharts（仅在旅行风景页需要时加载）
+     中国地图热力图 (原生 SVG，无需 ECharts)
      ========================================== */
-  function loadECharts(callback) {
-    var script = document.createElement('script')
-    script.src = 'https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js'
-    script.onload = callback
-    script.onerror = function () {
-      var chartDom = document.getElementById('china-map-chart')
-      if (chartDom) {
-        chartDom.classList.remove('china-map-loading')
-        var fallback = document.createElement('div')
-        fallback.className = 'china-map-fallback'
-        fallback.innerHTML = '<p>🗺️ 地图加载失败</p><p style="font-size:13px;color:#999;">请检查网络连接后刷新重试</p>'
-        chartDom.appendChild(fallback)
-      }
-    }
-    document.head.appendChild(script)
-  }
+  var svgMapState = { activeProvince: null, allLinks: null }
 
-  /* ==========================================
-     中国地图热力图 (ECharts)
-     ========================================== */
   function initChinaMap() {
     var mapWrapper = document.querySelector('.china-map-wrapper')
     if (!mapWrapper) return
@@ -175,23 +157,28 @@
     var waterfall = document.getElementById('travel-waterfall')
     if (!waterfall) return
 
-    // 按需动态加载 ECharts（仅旅行风景页会触发）
-    if (typeof echarts === 'undefined') {
-      chartDom.classList.add('china-map-loading')
-      loadECharts(function () {
-        initChinaMapCore(chartDom, waterfall)
-      })
-      return
-    }
+    chartDom.classList.add('china-map-loading')
 
-    initChinaMapCore(chartDom, waterfall)
+    fetch('/data/china.json')
+      .then(function (resp) { return resp.json() })
+      .then(function (geoJson) {
+        chartDom.classList.remove('china-map-loading')
+        renderSVGMap(chartDom, geoJson, waterfall)
+      })
+      .catch(function () {
+        chartDom.classList.remove('china-map-loading')
+        var fallback = document.createElement('div')
+        fallback.className = 'china-map-fallback'
+        fallback.innerHTML = '<p>🗺️ 地图加载失败</p><p style="font-size:13px;color:#999;">请检查网络连接后刷新重试</p>'
+        chartDom.appendChild(fallback)
+      })
   }
 
-  function initChinaMapCore(chartDom, waterfall) {
+  function renderSVGMap(container, geoJson, waterfall) {
     // 收集各省份照片数量
     var provinceCount = {}
-    var allCards = waterfall.querySelectorAll('.photo-card')
     var allLinks = waterfall.querySelectorAll('a[data-fancybox]')
+    svgMapState.allLinks = allLinks
 
     allLinks.forEach(function (link) {
       var card = link.querySelector('.photo-card')
@@ -214,11 +201,6 @@
       '香港特别行政区': 'xianggang', '澳门特别行政区': 'aomen'
     }
 
-    var codeToName = {}
-    Object.keys(nameToCode).forEach(function (name) {
-      codeToName[nameToCode[name]] = name
-    })
-
     // 全称 → 简称（用于显示）
     var shortName = {
       '新疆维吾尔自治区': '新疆', '西藏自治区': '西藏', '青海省': '青海', '甘肃省': '甘肃',
@@ -237,144 +219,175 @@
       if (provinceCount[k] > maxCount) maxCount = provinceCount[k]
     })
 
-    // 热力色阶
     var heatColors = ['#e8edf2', '#c8e0d6', '#a8d4c0', '#88c8aa', '#68bc94', '#48b07e', '#2d8a6e']
 
-    // 构建 ECharts 数据
-    var mapData = []
-    Object.keys(nameToCode).forEach(function (name) {
-      var code = nameToCode[name]
-      var count = provinceCount[code] || 0
-      mapData.push({ name: name, value: count })
-    })
-
-    // 创建筛选栏
+    // 创建筛选栏和 Toast
     createFilterBar(waterfall)
-
-    // 创建 Toast 弹窗
     createMapToast()
 
-    // 加载 GeoJSON 并初始化 ECharts
-    var activeProvince = null
+    // 创建投影函数
+    var svgWidth = 800
+    var svgHeight = 640
+    var project = createChinaProjection(svgWidth, svgHeight)
 
-    // 使用本地 GeoJSON（已下载到 source/data/china.json，同域加载更快）
-    fetch('/data/china.json')
-      .then(function (resp) { return resp.json() })
-      .then(function (geoJson) {
-        chartDom.classList.remove('china-map-loading')
-        echarts.registerMap('china', geoJson)
+    // 创建 SVG
+    var svgNS = 'http://www.w3.org/2000/svg'
+    var svg = document.createElementNS(svgNS, 'svg')
+    svg.setAttribute('viewBox', '0 0 ' + svgWidth + ' ' + svgHeight)
+    svg.setAttribute('class', 'china-map-svg')
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet')
 
-        var chart = echarts.init(chartDom)
-        chart.showLoading({
-          text: '地图加载中...',
-          color: '#5bae9e',
-          maskColor: 'rgba(255,255,255,0.7)',
-          fontSize: 14
-        })
+    // 创建 tooltip
+    var tooltip = document.createElement('div')
+    tooltip.className = 'china-map-tooltip'
+    tooltip.style.display = 'none'
+    container.style.position = 'relative'
+    container.appendChild(tooltip)
 
-        var option = {
-          tooltip: {
-            trigger: 'item',
-            formatter: function (params) {
-              if (params.data) {
-                var count = params.data.value || 0
-                return params.name + '<br/>📷 照片: ' + count + ' 张'
-              }
-              return params.name
-            }
-          },
-          visualMap: {
-            min: 0,
-            max: maxCount || 1,
-            left: 20,
-            bottom: 20,
-            show: false,
-            inRange: {
-              color: heatColors
-            }
-          },
-          series: [{
-            name: '足迹',
-            type: 'map',
-            map: 'china',
-            roam: false,
-            zoom: 1.5,
-            center: [104.5, 36],
-            label: {
-              show: true,
-              color: '#555',
-              fontSize: 11,
-              fontFamily: 'inherit'
-            },
-            emphasis: {
-              label: {
-                show: true,
-                color: '#333',
-                fontSize: 13,
-                fontWeight: 'bold'
-              },
-              itemStyle: {
-                areaColor: '#ffd700',
-                shadowBlur: 20,
-                shadowColor: 'rgba(0, 0, 0, 0.3)'
-              },
-              scale: 1.02
-            },
-            itemStyle: {
-              borderColor: '#fff',
-              borderWidth: 1.5,
-              areaColor: heatColors[0]
-            },
-            data: mapData,
-            animationDurationUpdate: 500,
-            animationEasingUpdate: 'cubicInOut'
-          }]
+    // 渲染省份路径和标签
+    var pathsGroup = document.createElementNS(svgNS, 'g')
+    var labelsGroup = document.createElementNS(svgNS, 'g')
+
+    geoJson.features.forEach(function (feature) {
+      var name = feature.properties.name
+      var code = nameToCode[name] || ''
+      var count = provinceCount[code] || 0
+
+      // 创建路径
+      var path = document.createElementNS(svgNS, 'path')
+      path.setAttribute('d', geoToPath(feature.geometry, project))
+      path.setAttribute('class', 'province-path' + (count > 0 ? ' has-photos' : ' no-photos'))
+      path.setAttribute('data-name', name)
+      path.setAttribute('data-code', code)
+      path.setAttribute('data-count', count)
+
+      // 热力色：count=0 用最浅色，count>0 从第2级开始按比例分配
+      var colorIdx
+      if (count === 0) {
+        colorIdx = 0
+      } else if (maxCount <= 1) {
+        colorIdx = heatColors.length - 1
+      } else {
+        // count >= 1 映射到 [1, heatColors.length-1]
+        colorIdx = Math.min(
+          1 + Math.floor((count - 1) / (maxCount - 1) * (heatColors.length - 2)),
+          heatColors.length - 1
+        )
+      }
+      path.setAttribute('fill', heatColors[colorIdx])
+
+      // 点击事件
+      path.addEventListener('click', function () {
+        var displayName = shortName[name] || name
+        if (!code || count === 0) {
+          showMapToast(displayName)
+          return
         }
-
-        chart.setOption(option)
-        chart.hideLoading()
-
-        // 省份点击事件
-        chart.on('click', function (params) {
-          if (params.componentType !== 'series') return
-
-          var provinceName = params.name
-          var code = nameToCode[provinceName]
-          var count = provinceCount[code] || 0
-          var displayName = shortName[provinceName] || provinceName
-
-          if (!code || count === 0) {
-            showMapToast(displayName)
-            return
-          }
-
-          if (activeProvince === code) {
-            // 取消筛选
-            clearProvinceFilter(waterfall, allLinks)
-            activeProvince = null
-            updateFilterBar(null, waterfall)
-            chart.dispatchAction({ type: 'downplay', seriesIndex: 0 })
-          } else {
-            activeProvince = code
-            filterByProvince(code, waterfall, allLinks, displayName, count)
-          }
-        })
-
-        // 窗口大小变化时重绘
-        window.addEventListener('resize', function () {
-          chart.resize()
-        })
-
-        // 存储 chart 实例以便后续使用
-        chartDom._echartInstance = chart
+        if (svgMapState.activeProvince === code) {
+          clearProvinceFilter(waterfall, allLinks)
+          svgMapState.activeProvince = null
+          updateFilterBar(null, waterfall)
+          pathsGroup.querySelectorAll('.province-path.active').forEach(function (p) {
+            p.classList.remove('active')
+          })
+        } else {
+          svgMapState.activeProvince = code
+          filterByProvince(code, waterfall, allLinks, displayName, count)
+          pathsGroup.querySelectorAll('.province-path.active').forEach(function (p) {
+            p.classList.remove('active')
+          })
+          path.classList.add('active')
+        }
       })
-      .catch(function () {
-        chartDom.classList.remove('china-map-loading')
-        var fallback = document.createElement('div')
-        fallback.className = 'china-map-fallback'
-        fallback.innerHTML = '<p>🗺️ 地图加载失败</p><p style="font-size:13px;color:#999;">请检查网络连接后刷新重试</p>'
-        chartDom.appendChild(fallback)
+
+      // 悬浮 tooltip
+      path.addEventListener('mouseenter', function () {
+        var displayName = shortName[name] || name
+        tooltip.innerHTML = '<strong>' + displayName + '</strong><br>📷 照片: ' + count + ' 张'
+        tooltip.style.display = 'block'
       })
+      path.addEventListener('mousemove', function (e) {
+        var rect = container.getBoundingClientRect()
+        tooltip.style.left = (e.clientX - rect.left + 12) + 'px'
+        tooltip.style.top = (e.clientY - rect.top - 40) + 'px'
+      })
+      path.addEventListener('mouseleave', function () {
+        tooltip.style.display = 'none'
+      })
+
+      pathsGroup.appendChild(path)
+
+      // 创建标签：优先使用 centroid（几何中心），其次 center（省会）
+      var center = feature.properties.centroid || feature.properties.center
+      if (center) {
+        var pos = project(center[0], center[1])
+        var text = document.createElementNS(svgNS, 'text')
+        text.setAttribute('x', pos[0])
+        text.setAttribute('y', pos[1])
+        text.setAttribute('text-anchor', 'middle')
+        text.setAttribute('dominant-baseline', 'central')
+        text.setAttribute('class', 'province-label-text')
+        text.textContent = shortName[name] || name
+        labelsGroup.appendChild(text)
+      }
+    })
+
+    svg.appendChild(pathsGroup)
+    svg.appendChild(labelsGroup)
+    container.innerHTML = ''
+    container.appendChild(svg)
+    container.appendChild(tooltip)
+  }
+
+  /* ====== 投影函数（等距圆柱 + 纬度余弦修正） ====== */
+  function createChinaProjection(width, height) {
+    var minLon = 73.5, maxLon = 135.5
+    var minLat = 17.5, maxLat = 53.5
+    var centerLat = (minLat + maxLat) / 2
+    var cosCenter = Math.cos(centerLat * Math.PI / 180)
+
+    var padding = 15
+    var mapW = width - padding * 2
+    var mapH = height - padding * 2
+
+    var scaleX = mapW / ((maxLon - minLon) * cosCenter)
+    var scaleY = mapH / (maxLat - minLat)
+    var scale = Math.min(scaleX, scaleY)
+
+    var offsetX = padding + (mapW - (maxLon - minLon) * scale * cosCenter) / 2
+    var offsetY = padding + (mapH - (maxLat - minLat) * scale) / 2
+
+    return function (lon, lat) {
+      var x = (lon - minLon) * cosCenter * scale + offsetX
+      var y = (maxLat - lat) * scale + offsetY
+      return [x, y]
+    }
+  }
+
+  /* ====== GeoJSON → SVG path ====== */
+  function geoToPath(geometry, project) {
+    var type = geometry.type
+    var coords = geometry.coordinates
+
+    if (type === 'Polygon') {
+      return ringsToPath(coords, project)
+    } else if (type === 'MultiPolygon') {
+      return coords.map(function (polygon) {
+        return ringsToPath(polygon, project)
+      }).join(' ')
+    }
+    return ''
+  }
+
+  function ringsToPath(rings, project) {
+    return rings.map(function (ring) {
+      var d = ''
+      for (var i = 0; i < ring.length; i++) {
+        var p = project(ring[i][0], ring[i][1])
+        d += (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)
+      }
+      return d + 'Z'
+    }).join(' ')
   }
 
   /**
@@ -434,10 +447,10 @@
     bar.innerHTML = '<span class="filter-label"></span><span class="filter-count"></span><button class="filter-clear">← 返回全部</button>'
 
     bar.querySelector('.filter-clear').addEventListener('click', function () {
-      var chartDom = document.getElementById('china-map-chart')
-      if (chartDom && chartDom._echartInstance) {
-        chartDom._echartInstance.dispatchAction({ type: 'downplay', seriesIndex: 0 })
-      }
+      // 移除地图高亮
+      var activePath = document.querySelector('.china-map-svg .province-path.active')
+      if (activePath) activePath.classList.remove('active')
+      svgMapState.activeProvince = null
       var allLinks = waterfall.querySelectorAll('a[data-fancybox]')
       clearProvinceFilter(waterfall, allLinks)
       bar.classList.remove('visible')

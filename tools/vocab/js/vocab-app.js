@@ -340,7 +340,35 @@
   }
 
   function saveAppData() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData))
+    // 清理 dailyLog 中超过 90 天的 words 数组，防止 localStorage 溢出
+    var today = getToday()
+    var ninetyDaysAgo = new Date()
+    ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90)
+    var cutoff = ninetyDaysAgo.getFullYear() + '-' +
+      String(ninetyDaysAgo.getMonth() + 1).padStart(2, '0') + '-' +
+      String(ninetyDaysAgo.getDate()).padStart(2, '0')
+
+    Object.keys(appData.dailyLog).forEach(function (dateStr) {
+      if (dateStr < cutoff) {
+        // 保留计数，删除 words 数组（占空间最大）
+        delete appData.dailyLog[dateStr].words
+      }
+    })
+
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData))
+    } catch (e) {
+      // localStorage 满了，清理最老的 30 天日志
+      var dates = Object.keys(appData.dailyLog).sort()
+      for (var i = 0; i < 30 && i < dates.length; i++) {
+        delete appData.dailyLog[dates[i]]
+      }
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData))
+      } catch (e2) {
+        showToast('存储空间不足，部分历史数据已清理', 'error')
+      }
+    }
   }
 
   /* ==========================================
@@ -368,12 +396,45 @@
     var book = findBookById(bookId)
     if (!book || (currentBook && currentBook.id === bookId)) return
 
+    // 切换词库时清除旧进度，避免索引错乱
+    var oldBookId = currentBook ? currentBook.id : null
     currentBook = book
     localStorage.setItem(STORAGE_KEY_BOOK, bookId)
     wordsReady = false
     allWordsLoaded = false
     allWords = []
-    appData.currentSession = null  // 切换词库时清除旧会话
+
+    if (oldBookId && oldBookId !== bookId) {
+      // 保存旧词库进度到独立 key
+      if (Object.keys(appData.progress).length > 0) {
+        localStorage.setItem(STORAGE_KEY + '_' + oldBookId, JSON.stringify({
+          progress: appData.progress,
+          dailyLog: appData.dailyLog,
+          lastActiveDate: appData.lastActiveDate
+        }))
+      }
+      // 尝试恢复新词库的进度
+      var saved = localStorage.getItem(STORAGE_KEY + '_' + bookId)
+      if (saved) {
+        try {
+          var oldData = JSON.parse(saved)
+          appData.progress = oldData.progress || {}
+          appData.dailyLog = oldData.dailyLog || {}
+          appData.lastActiveDate = oldData.lastActiveDate || ''
+          localStorage.removeItem(STORAGE_KEY + '_' + bookId)
+        } catch (e) {
+          appData.progress = {}
+          appData.dailyLog = {}
+          appData.lastActiveDate = ''
+        }
+      } else {
+        appData.progress = {}
+        appData.dailyLog = {}
+        appData.lastActiveDate = ''
+      }
+    }
+
+    appData.currentSession = null
     saveAppData()
 
     renderBooksPage()
@@ -500,6 +561,15 @@
   function getNewWordsToLearn() {
     var today = getToday()
     var learned = Object.keys(appData.progress).map(Number)
+    // 排除当前会话中已学但未标记的词
+    if (appData.currentSession && appData.currentSession.date === today) {
+      var sessionWords = appData.currentSession.learnWords || []
+      for (var s = 0; s < appData.currentSession.learnIndex; s++) {
+        if (learned.indexOf(sessionWords[s]) === -1) {
+          learned.push(sessionWords[s])
+        }
+      }
+    }
     var available = []
     for (var i = 0; i < allWords.length; i++) {
       if (learned.indexOf(i) === -1) {
@@ -599,10 +669,16 @@
       stageCounts[stage] = (stageCounts[stage] || 0) + 1
     })
 
-    // 连续打卡天数
+    // 连续打卡天数（今天未学习不算断签）
     var streak = 0
     var today = getToday()
+    var todayLog = appData.dailyLog[today]
+    var todayActive = todayLog && (todayLog.newWords > 0 || todayLog.reviewed > 0)
     var d = new Date(today)
+    // 如果今天还没学习，从昨天开始算
+    if (!todayActive) {
+      d.setDate(d.getDate() - 1)
+    }
     while (true) {
       var dateStr = d.getFullYear() + '-' +
         String(d.getMonth() + 1).padStart(2, '0') + '-' +
@@ -614,6 +690,8 @@
         break
       }
     }
+    // 今天已学习则 +1
+    if (todayActive) streak++
 
     return {
       total: total,
@@ -861,14 +939,19 @@
 
   function handleLearnAnswer(remembered) {
     var idx = currentLearnWords[currentLearnIndex]
+    var today = getToday()
     if (remembered) {
       markWordLearned(idx)
     } else {
-      // 没记住：也标记为已学，但立即加入今日复习队列
+      // 没记住：标记为已学，重置复习到今天
       markWordLearned(idx)
-      markWordReviewed(idx, false)
-      // 覆盖为今天复习
-      appData.progress[idx].nextReview = getToday()
+      var p = appData.progress[idx]
+      if (p) {
+        p.reviewCount = 0
+        p.stage = 0
+        p.status = 'reviewing'
+        p.nextReview = today  // 今天就需要复习
+      }
     }
     currentLearnIndex++
     // 保存会话进度
@@ -1287,14 +1370,15 @@
         input.focus()
         $('btnSpellCheck').textContent = '检查'
         $('btnSpellCheck').disabled = false
+        // 只在最终结果时标记，避免 reviewed 计数膨胀
         if (!appData.progress[idx]) markWordLearned(idx)
         markWordReviewed(idx, false)
       } else {
         $('spellFeedback').innerHTML = '❌ 不对哦，再试一次！'
         $('spellFeedback').className = 'spell-feedback wrong'
         $('spellHint').textContent = '💡 提示：首字母是 "' + correctWord.charAt(0) + '"，共 ' + correctWord.length + ' 个字母'
+        // 第一次错误不调用 markWordReviewed，避免 reviewed 计数膨胀
         if (!appData.progress[idx]) markWordLearned(idx)
-        markWordReviewed(idx, false)
         setTimeout(function () {
           input.className = 'spell-input'
           input.value = ''
