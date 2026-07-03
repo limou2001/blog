@@ -521,6 +521,19 @@
     initPhotoWall()
   }
 
+  // 加密页面解密后 DOM 才出现，需监听 .photo-waterfall 元素注入
+  if (!document.querySelector('.photo-waterfall')) {
+    var observer = new MutationObserver(function (mutations, obs) {
+      if (document.querySelector('.photo-waterfall')) {
+        obs.disconnect()
+        initPhotoWall()
+      }
+    })
+    observer.observe(document.body, { childList: true, subtree: true })
+    // 兜底：30 秒后停止监听，避免长期占用
+    setTimeout(function () { observer.disconnect() }, 30000)
+  }
+
   // PJAX 页面切换后重新初始化
   if (typeof btf !== 'undefined' && btf.addGlobalFn) {
     btf.addGlobalFn('pjaxComplete', initPhotoWall, 'photoWall')
