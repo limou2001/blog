@@ -40,4 +40,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   updateRuntime()
   setInterval(updateRuntime, 1000)
+
+  // 不蒜子访客统计 - 在页脚显示 PV/UV
+  var statsSpan = document.createElement('span')
+  statsSpan.className = 'footer-stats'
+  statsSpan.style.marginLeft = '8px'
+  statsSpan.innerHTML = '| 访客数 <span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></span> | 总访问 <span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></span>'
+  footerEl.appendChild(statsSpan)
 })
