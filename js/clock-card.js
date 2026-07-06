@@ -237,3 +237,84 @@ document.addEventListener('DOMContentLoaded', function () {
   update()
   setInterval(update, 200)
 })
+
+function initClock () {
+  var asideContent = document.getElementById('aside-content')
+  if (!asideContent) return
+
+  if (asideContent.querySelector('.card-clock')) return
+
+  var periods = [
+    { range: [0, 5], name: '深夜', icon: 'fa-solid fa-moon', greeting: '夜深了，注意休息', query: 'night,stars,galaxy' },
+    { range: [5, 8], name: '清晨', icon: 'fa-solid fa-sun', greeting: '清晨好，新的一天开始', query: 'sunrise,morning' },
+    { range: [8, 11], name: '上午', icon: 'fa-solid fa-sun', greeting: '上午好，加油呀', query: 'blue,sky,clouds' },
+    { range: [11, 13], name: '中午', icon: 'fa-solid fa-sun', greeting: '中午好，记得吃饭', query: 'sun,bright' },
+    { range: [13, 17], name: '下午', icon: 'fa-solid fa-cloud-sun', greeting: '下午好，喝杯茶吧', query: 'afternoon,landscape' },
+    { range: [17, 19], name: '傍晚', icon: 'fa-solid fa-cloud-sun-rain', greeting: '傍晚好，看日落啦', query: 'sunset,dusk' },
+    { range: [19, 22], name: '晚上', icon: 'fa-solid fa-cloud-moon', greeting: '晚上好，放松一下', query: 'evening,city,lights' },
+    { range: [22, 24], name: '深夜', icon: 'fa-solid fa-moon', greeting: '夜深了，早点休息', query: 'night,stars,galaxy' }
+  ]
+
+  function getPeriod (h) {
+    for (var i = 0; i < periods.length; i++) {
+      if (h >= periods[i].range[0] && h < periods[i].range[1]) return periods[i]
+    }
+    return periods[0]
+  }
+
+  function buildAnalogClockSVG () {
+    var svg = '<svg class="analog-clock" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">'
+    svg += '<circle class="clock-face" cx="55" cy="55" r="50"/>'
+    for (var i = 0; i < 12; i++) {
+      var angle = (i * 30 - 90) * Math.PI / 180
+      svg += '<line class="clock-mark" x1="' + (55 + 40 * Math.cos(angle)) + '" y1="' + (55 + 40 * Math.sin(angle)) + '" x2="' + (55 + 45 * Math.cos(angle)) + '" y2="' + (55 + 45 * Math.sin(angle)) + '"/>'
+    }
+    svg += '<line class="hour-hand" x1="55" y1="55" x2="55" y2="30"/><line class="minute-hand" x1="55" y1="55" x2="55" y2="20"/><line class="second-hand" x1="55" y1="55" x2="55" y2="15"/><circle class="clock-center" cx="55" cy="55" r="3"/></svg>'
+    return svg
+  }
+
+  function buildDigitalClockHTML (h, m, s) {
+    return '<div class="digital-clock"><span class="digital-time">' + h.toString().padStart(2, '0') + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0') + '</span></div>'
+  }
+
+  var card = document.createElement('div')
+  card.className = 'card-clock'
+  card.innerHTML = '<div class="clock-content">' + buildAnalogClockSVG() + buildDigitalClockHTML(0, 0, 0) + '<div class="clock-info"><div class="clock-period"></div><div class="clock-greeting"></div></div></div>'
+  asideContent.insertBefore(card, asideContent.firstChild)
+
+  function update () {
+    var now = new Date()
+    var h = now.getHours(), m = now.getMinutes(), s = now.getSeconds(), ms = now.getMilliseconds()
+    var analogClockEl = document.querySelector('.analog-clock')
+    var digitalClockEl = document.querySelector('.digital-clock')
+    if (!analogClockEl || !digitalClockEl) return
+
+    var secondDeg = (s + ms / 1000) * 6
+    var minuteDeg = m * 6 + secondDeg / 60
+    var hourDeg = h % 12 * 30 + minuteDeg / 12
+
+    var secondHand = analogClockEl.querySelector('.second-hand')
+    var minuteHand = analogClockEl.querySelector('.minute-hand')
+    var hourHand = analogClockEl.querySelector('.hour-hand')
+    if (secondHand) secondHand.setAttribute('transform', 'rotate(' + secondDeg + ' 55 55)')
+    if (minuteHand) minuteHand.setAttribute('transform', 'rotate(' + minuteDeg + ' 55 55)')
+    if (hourHand) hourHand.setAttribute('transform', 'rotate(' + hourDeg + ' 55 55)')
+
+    digitalClockEl.innerHTML = buildDigitalClockHTML(h, m, s)
+
+    var period = getPeriod(h)
+    var periodEl = document.querySelector('.clock-period')
+    var greetingEl = document.querySelector('.clock-greeting')
+    if (periodEl) periodEl.innerHTML = '<i class="' + period.icon + '"></i> ' + period.name
+    if (greetingEl) greetingEl.textContent = period.greeting
+
+    var cardEl = document.querySelector('.card-clock')
+    if (cardEl) cardEl.style.background = 'linear-gradient(135deg, rgba(33,33,33,0.95), rgba(20,20,20,0.9)), url(https://source.unsplash.com/1920x1080/?' + period.query + ')'
+  }
+
+  update()
+  setInterval(update, 200)
+}
+
+document.addEventListener('DOMContentLoaded', initClock)
+document.addEventListener('pjax:complete', initClock)
