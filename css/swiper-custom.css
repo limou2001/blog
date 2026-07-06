@@ -1,0 +1,31 @@
+/* 隐藏文章轮播，扩大随便逛逛区域 */
+#swiper_container {
+  display: none !important;
+}
+
+#random {
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+#random-banner {
+  width: 100% !important;
+  height: 280px !important;
+}
+
+#peoplecanvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+#random {
+  font-size: 56px;
+}
+
+@media screen and (max-width: 1050px) {
+  #random {
+    display: block !important;
+  }
+}
