@@ -25,11 +25,23 @@ function initDaily () {
     '</div>' +
     '<div class="daily-card-bing-tag">Bing</div>'
 
-  var firstCard = asideContent.querySelector('.card-widget')
-  if (firstCard && firstCard.nextSibling) {
-    asideContent.insertBefore(card, firstCard.nextSibling)
+  // 插入到时钟后面（使用card-clock class）
+  var clockCard = asideContent.querySelector('.card-clock')
+  if (clockCard && clockCard.nextSibling) {
+    asideContent.insertBefore(card, clockCard.nextSibling)
   } else {
-    asideContent.insertBefore(card, asideContent.firstChild)
+    // 如果没有时钟，插入到公告后面
+    var announcementCard = asideContent.querySelector('#card-announcement')
+    if (announcementCard && announcementCard.nextSibling) {
+      asideContent.insertBefore(card, announcementCard.nextSibling)
+    } else {
+      var firstCard = asideContent.querySelector('.card-widget')
+      if (firstCard && firstCard.nextSibling) {
+        asideContent.insertBefore(card, firstCard.nextSibling)
+      } else {
+        asideContent.insertBefore(card, asideContent.firstChild)
+      }
+    }
   }
 
   var textEl = card.querySelector('.daily-card-text')
