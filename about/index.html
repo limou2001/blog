@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://gongyeqi.top/img/neko01.png">
 <meta property="article:published_time" content="2026-06-17T07:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-06T05:17:43.320Z">
+<meta property="article:modified_time" content="2026-07-06T05:45:34.752Z">
 <meta property="article:author" content="宫野琦">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://gongyeqi.top/img/neko01.png"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://gongyeqi.top/about/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.14/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
@@ -1278,29 +1278,27 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(function() {
-      var map = L.map('hangzhou-map', {
-        center: [30.2741, 120.1551],
-        zoom: 9,
-        zoomControl: false,
-        attributionControl: false
-      });
+  setTimeout(function() {
+    var map = L.map('hangzhou-map', {
+      center: [30.2741, 120.1551],
+      zoom: 9,
+      zoomControl: false,
+      attributionControl: false
+    });
 
-      L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
-        subdomains: '1234'
-      }).addTo(map);
+    L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
+      subdomains: '1234'
+    }).addTo(map);
 
-      var marker = L.marker([30.2741, 120.1551], {
-        icon: L.divIcon({
-          className: 'custom-marker',
-          html: '<div class="marker-inner"><span class="marker-icon">📍</span></div>',
-          iconSize: [40, 40],
-          iconAnchor: [20, 40]
-        })
-      }).addTo(map);
-    }, 100);
-  });
+    var marker = L.marker([30.2741, 120.1551], {
+      icon: L.divIcon({
+        className: 'custom-marker',
+        html: '<div class="marker-inner"><span class="marker-icon">📍</span></div>',
+        iconSize: [40, 40],
+        iconAnchor: [20, 40]
+      })
+    }).addTo(map);
+  }, 100);
 </script>
 
 <style>
