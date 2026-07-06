@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://gongyeqi.top/img/neko01.png">
 <meta property="article:published_time" content="2026-06-17T07:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-06T05:53:30.803Z">
+<meta property="article:modified_time" content="2026-07-06T06:06:59.394Z">
 <meta property="article:author" content="宫野琦">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://gongyeqi.top/img/neko01.png"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://gongyeqi.top/about/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1.14/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
@@ -1173,37 +1173,57 @@
 </div>
 
 <script>
-  async function renderSkills() {
+  function renderSkills() {
     const container = document.getElementById('skills-container');
-    if (container.querySelector('.skills-row')) return;
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    const skillsConfig = {
+      frontend: [
+        { icon: 'devicon-html5-plain colored', name: 'HTML' },
+        { icon: 'devicon-css3-plain colored', name: 'CSS' },
+        { icon: 'devicon-javascript-plain colored', name: 'JavaScript' },
+        { icon: 'devicon-jquery-plain colored', name: 'jQuery' },
+        { icon: 'devicon-bootstrap-plain colored', name: 'Bootstrap' },
+        { icon: 'devicon-vuejs-plain colored', name: 'Vue.js' },
+        { icon: 'devicon-typescript-plain colored', name: 'TypeScript' }
+      ],
+      backend: [
+        { icon: 'devicon-java-plain colored', name: 'Java' },
+        { icon: 'devicon-spring-plain colored', name: 'SpringBoot' },
+        { icon: 'devicon-mysql-plain colored', name: 'MySQL' },
+        { icon: 'devicon-redis-plain colored', name: 'Redis' },
+        { icon: 'devicon-mybatis-plain colored', name: 'MyBatis' },
+        { icon: 'devicon-apachespark-plain colored', name: 'Shiro' }
+      ],
+      devops: [
+        { icon: 'devicon-docker-plain colored', name: 'Docker' },
+        { icon: 'devicon-git-plain colored', name: 'Git' },
+        { icon: 'devicon-linux-plain colored', name: 'Linux' },
+        { icon: 'devicon-nginx-plain', name: 'Nginx' },
+        { icon: 'devicon-intellij-plain colored', name: 'IDEA' },
+        { icon: 'devicon-maven-plain colored', name: 'Maven' }
+      ]
+    };
 
     const rows = ['frontend', 'backend', 'devops'];
 
-    // 从 json 文件读取配置
-    try {
-      const response = await fetch('/skills.json');
-      if (!response.ok) throw new Error('Failed to load');
-      const skillsConfig = await response.json();
+    for (const rowName of rows) {
+      const row = document.createElement('div');
+      row.className = 'skills-row';
 
-      for (const rowName of rows) {
-        const row = document.createElement('div');
-        row.className = 'skills-row';
+      const skills = skillsConfig[rowName];
+      const allSkills = [...skills, ...skills];
 
-        const skills = skillsConfig[rowName];
-        // 添加原始和重复内容实现无缝滚动
-        const allSkills = [...skills, ...skills];
+      allSkills.forEach(skill => {
+        const item = document.createElement('div');
+        item.className = 'skill-item';
+        item.innerHTML = `<i class="skill-icon ${skill.icon}"></i><span>${skill.name}</span>`;
+        row.appendChild(item);
+      });
 
-        allSkills.forEach(skill => {
-          const item = document.createElement('div');
-          item.className = 'skill-item';
-          item.innerHTML = `<i class="skill-icon ${skill.icon}"></i><span>${skill.name}</span>`;
-          row.appendChild(item);
-        });
-
-        container.appendChild(row);
-      }
-    } catch (e) {
-      console.error('加载技术栈配置失败:', e);
+      container.appendChild(row);
     }
   }
 
