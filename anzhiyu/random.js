@@ -1,1 +1,1 @@
-var posts=["2026/07/07/大模型基础概念/","2026/06/22/英语学习之路/"];function toRandomPost(){pjax.loadUrl('/'+posts[Math.floor(Math.random() * posts.length)]);};
+var posts=["2026/06/22/英语学习之路/","2026/07/07/大模型基础概念/"];function toRandomPost(){pjax.loadUrl('/'+posts[Math.floor(Math.random() * posts.length)]);};
