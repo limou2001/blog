@@ -1,8 +1,4 @@
-/* 隐藏文章轮播，扩大随便逛逛区域 */
-#swiper_container {
-  display: none !important;
-}
-
+/* 轮播样式自定义 */
 #random {
   width: 100% !important;
   margin-left: 0 !important;
