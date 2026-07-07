@@ -74,6 +74,8 @@ document.addEventListener('DOMContentLoaded', function () {
     content.appendChild(closeBtn)
     closeBtn.addEventListener('click', function () {
       restoreProgressBar()
+      // 清除初始化标记，允许下次重新初始化
+      if (input) input.dataset.eyeInit = '0'
       if (window.history.length > 1) {
         window.history.back()
       } else {
@@ -131,7 +133,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 立即执行初始化（不延迟）
   function tryInit () {
-    if (document.querySelector('.hbe-input-field-default')) {
+    var input = document.querySelector('.hbe-input-field-default')
+    if (input && input.dataset.eyeInit !== '1') {
       initEncryptUI()
       return true
     }
@@ -139,16 +142,16 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // 立即尝试执行
-  if (!tryInit()) {
-    // 如果没找到元素，使用 MutationObserver 监听
-    var observer = new MutationObserver(function (mutations, obs) {
-      if (tryInit()) {
-        obs.disconnect()
-      }
-    })
-    observer.observe(document.body, { childList: true, subtree: true })
-    setTimeout(function () { observer.disconnect() }, 10000)
-  }
+  tryInit()
+
+  // 持续监听加密框出现
+  var observer = new MutationObserver(function (mutations, obs) {
+    if (tryInit()) {
+      // 找到后继续监听，以防页面重新渲染
+    }
+  })
+  observer.observe(document.body, { childList: true, subtree: true })
+  setTimeout(function () { observer.disconnect() }, 30000)
 
   // 持续监听加密框状态，确保进度条始终在最上层
   var progressObserver = new MutationObserver(function () {
