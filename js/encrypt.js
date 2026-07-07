@@ -10,30 +10,30 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // 立即设置进度条到最上层
+  function bringProgressBarToTop () {
+    var progressBar = document.querySelector('.reading-progress-bar')
+    if (progressBar) {
+      progressBar.style.setProperty('z-index', '10000', 'important')
+    }
+  }
+
   function initEncryptUI () {
     var container = document.getElementById('hexo-blog-encrypt')
     var content = document.querySelector('.hbe-content')
     var input = document.querySelector('.hbe-input-field-default')
     if (!input || !content || !container) return
-    if (input.dataset.eyeInit) return
+    if (input.dataset.eyeInit === '1') return
     input.dataset.eyeInit = '1'
 
+    // 立即将进度条放到最上层
+    bringProgressBarToTop()
+
     // 关键：禁用 #content-inner 的 transform 动画
-    // 原因：#content-inner 有 bottom-top 动画使用 transform: translateY(35px)，
-    // 动画期间会破坏 .hbe-container 的 position: fixed 定位（变成相对祖先定位），
-    // 导致弹窗先在底部显示再跳到中心。
-    // 不能移动容器到 body，否则 hbe 解密后会用解密内容替换该元素，
-    // 导致内容脱离 #article-container，相册等页面 JS 失效。
     var contentInner = document.getElementById('content-inner')
     if (contentInner) {
       contentInner.style.setProperty('animation', 'none', 'important')
       contentInner.style.setProperty('transform', 'none', 'important')
-    }
-
-    // 加密框弹出时：将阅读进度条放到最上层
-    var progressBar = document.querySelector('.reading-progress-bar')
-    if (progressBar) {
-      progressBar.style.setProperty('z-index', '10000', 'important')
     }
 
     // 读取 md 中设置的三个字段
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
       eyeBtn.innerHTML = visible ? EYE_CLOSE_SVG : EYE_OPEN_SVG
     })
 
-    // 必应每日美图作弹窗卡片背景（与每日一言卡片保持一致）
+    // 必应每日美图作弹窗卡片背景
     fetch('https://api.xygeng.cn/bing/')
       .then(function (res) { return res.json() })
       .then(function (data) {
@@ -129,40 +129,36 @@ document.addEventListener('DOMContentLoaded', function () {
       })
   }
 
-  // 延迟执行，确保元素完全渲染
-  function delayedInit () {
-    setTimeout(initEncryptUI, 200)
+  // 立即执行初始化（不延迟）
+  function tryInit () {
+    if (document.querySelector('.hbe-input-field-default')) {
+      initEncryptUI()
+      return true
+    }
+    return false
   }
 
-  // 加密页元素可能延迟渲染，监听 input 出现
-  // 延迟 200ms 执行，确保 .hbe-content 内部元素（abstract、message）已渲染
-  var observer = new MutationObserver(function (mutations, obs) {
-    if (document.querySelector('.hbe-input-field-default')) {
-      delayedInit()
-      obs.disconnect()
-    }
-  })
-
-  // 先尝试执行一次（延迟）
-  delayedInit()
-
-  // 同时启动监听，以防页面动态加载
-  observer.observe(document.body, { childList: true, subtree: true })
-  setTimeout(function () { observer.disconnect() }, 30000)
-
-  // 额外保护：监听加密框显示状态，确保进度条在最上层
-  var encryptObserver = new MutationObserver(function (mutations, obs) {
-    var encryptContainer = document.getElementById('hexo-blog-encrypt')
-    var input = document.querySelector('.hbe-input-field-default')
-    if (encryptContainer && input) {
-      var progressBar = document.querySelector('.reading-progress-bar')
-      if (progressBar) {
-        progressBar.style.setProperty('z-index', '10000', 'important')
+  // 立即尝试执行
+  if (!tryInit()) {
+    // 如果没找到元素，使用 MutationObserver 监听
+    var observer = new MutationObserver(function (mutations, obs) {
+      if (tryInit()) {
+        obs.disconnect()
       }
+    })
+    observer.observe(document.body, { childList: true, subtree: true })
+    setTimeout(function () { observer.disconnect() }, 10000)
+  }
+
+  // 持续监听加密框状态，确保进度条始终在最上层
+  var progressObserver = new MutationObserver(function () {
+    var encryptContainer = document.getElementById('hexo-blog-encrypt')
+    if (encryptContainer) {
+      bringProgressBarToTop()
     }
   })
-  encryptObserver.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] })
-  setTimeout(function () { encryptObserver.disconnect() }, 30000)
+  progressObserver.observe(document.body, { childList: true, subtree: true, attributes: true })
+  setTimeout(function () { progressObserver.disconnect() }, 30000)
 
   // 解密成功后滚动到页面顶部，恢复进度条
   window.addEventListener('hexo-blog-decrypt', function () {
