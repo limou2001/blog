@@ -2,6 +2,15 @@ document.addEventListener('DOMContentLoaded', function () {
   var EYE_OPEN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'
   var EYE_CLOSE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
 
+  // 恢复背景滚动和进度条状态
+  function restoreBackgroundState () {
+    document.body.style.setProperty('overflow', '', '')
+    var progressBar = document.querySelector('.reading-progress-bar')
+    if (progressBar) {
+      progressBar.style.setProperty('z-index', '', '')
+    }
+  }
+
   function initEncryptUI () {
     var container = document.getElementById('hexo-blog-encrypt')
     var content = document.querySelector('.hbe-content')
@@ -67,6 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
     closeBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
     content.appendChild(closeBtn)
     closeBtn.addEventListener('click', function () {
+      restoreBackgroundState()
       if (window.history.length > 1) {
         window.history.back()
       } else {
@@ -125,26 +135,35 @@ document.addEventListener('DOMContentLoaded', function () {
   initEncryptUI()
 
   // 加密页元素可能延迟渲染，监听 input 出现
-  if (!document.querySelector('.hbe-input-field-default')) {
-    var observer = new MutationObserver(function (mutations, obs) {
-      if (document.querySelector('.hbe-input-field-default')) {
-        initEncryptUI()
-        obs.disconnect()
+  var observer = new MutationObserver(function (mutations, obs) {
+    if (document.querySelector('.hbe-input-field-default')) {
+      initEncryptUI()
+      obs.disconnect()
+    }
+  })
+  observer.observe(document.body, { childList: true, subtree: true })
+  setTimeout(function () { observer.disconnect() }, 30000)
+
+  // 额外保护：监听加密框显示状态，确保禁止滚动
+  // 因为有时候 initEncryptUI 可能在加密框完全显示前执行
+  var encryptObserver = new MutationObserver(function (mutations, obs) {
+    var encryptContainer = document.getElementById('hexo-blog-encrypt')
+    var input = document.querySelector('.hbe-input-field-default')
+    if (encryptContainer && input) {
+      // 加密框显示时禁止滚动
+      document.body.style.setProperty('overflow', 'hidden', 'important')
+      var progressBar = document.querySelector('.reading-progress-bar')
+      if (progressBar) {
+        progressBar.style.setProperty('z-index', '10000', 'important')
       }
-    })
-    observer.observe(document.body, { childList: true, subtree: true })
-    setTimeout(function () { observer.disconnect() }, 30000)
-  }
+    }
+  })
+  encryptObserver.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] })
+  setTimeout(function () { encryptObserver.disconnect() }, 30000)
 
   // 解密成功后滚动到页面顶部，恢复背景滚动
   window.addEventListener('hexo-blog-decrypt', function () {
     window.scrollTo(0, 0)
-    // 恢复背景滚动
-    document.body.style.setProperty('overflow', '', '')
-    // 恢复进度条 z-index
-    var progressBar = document.querySelector('.reading-progress-bar')
-    if (progressBar) {
-      progressBar.style.setProperty('z-index', '', '')
-    }
+    restoreBackgroundState()
   })
 })
