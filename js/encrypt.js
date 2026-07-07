@@ -22,6 +22,14 @@ document.addEventListener('DOMContentLoaded', function () {
       contentInner.style.setProperty('transform', 'none', 'important')
     }
 
+    // 加密框弹出时：将阅读进度条放到最上层并禁止滚动
+    var progressBar = document.querySelector('.reading-progress-bar')
+    if (progressBar) {
+      progressBar.style.setProperty('z-index', '10000', 'important')
+    }
+    // 禁止背景滚动
+    document.body.style.setProperty('overflow', 'hidden', 'important')
+
     // 读取 md 中设置的三个字段
     var abstractEl = content.querySelector('.hbe-abstract')
     var abstractText = abstractEl ? abstractEl.textContent.trim() : ''
@@ -128,8 +136,15 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () { observer.disconnect() }, 30000)
   }
 
-  // 解密成功后滚动到页面顶部
+  // 解密成功后滚动到页面顶部，恢复背景滚动
   window.addEventListener('hexo-blog-decrypt', function () {
     window.scrollTo(0, 0)
+    // 恢复背景滚动
+    document.body.style.setProperty('overflow', '', '')
+    // 恢复进度条 z-index
+    var progressBar = document.querySelector('.reading-progress-bar')
+    if (progressBar) {
+      progressBar.style.setProperty('z-index', '', '')
+    }
   })
 })
