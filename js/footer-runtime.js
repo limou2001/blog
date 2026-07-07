@@ -41,31 +41,6 @@ document.addEventListener('DOMContentLoaded', function () {
   updateRuntime()
   setInterval(updateRuntime, 1000)
 
-  // 不蒜子访客统计 - 在页脚显示 PV/UV
-  var statsSpan = document.createElement('span')
-  statsSpan.className = 'footer-stats'
-  statsSpan.style.marginLeft = '8px'
-  statsSpan.innerHTML = '| 访客 <span id="busuanzi_value_site_uv">-</span> | 浏览 <span id="busuanzi_value_site_pv">-</span>'
-  footerEl.appendChild(statsSpan)
-
-  // 加载不蒜子统计（使用国内镜像，超时5秒）
-  var busuanziTimer = setTimeout(function () {
-    document.getElementById('busuanzi_value_site_uv').textContent = '-'
-    document.getElementById('busuanzi_value_site_pv').textContent = '-'
-  }, 5000)
-
-  var script = document.createElement('script')
-  script.src = 'https://busuanzi.ibruce.info/busuanzi/pure.js'
-  script.onload = function () {
-    clearTimeout(busuanziTimer)
-  }
-  script.onerror = function () {
-    clearTimeout(busuanziTimer)
-    document.getElementById('busuanzi_value_site_uv').textContent = '-'
-    document.getElementById('busuanzi_value_site_pv').textContent = '-'
-  }
-  document.head.appendChild(script)
-
   // 安知鱼风格：工作时间/下班状态
   var workSpan = document.createElement('span')
   workSpan.className = 'footer-work-status'
