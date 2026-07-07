@@ -1,13 +1,20 @@
 document.addEventListener('DOMContentLoaded', function () {
-  var runtimeEl = document.getElementById('runtimeshow')
   var footerEl = document.querySelector('.footer-copyright')
-  if (!runtimeEl || !footerEl) return
+  if (!footerEl) return
 
-  var publishDate = runtimeEl.getAttribute('data-publishDate')
-  if (!publishDate) return
+  // 尝试从 #runtimeshow 获取日期，如果没有则使用默认值
+  var runtimeEl = document.getElementById('runtimeshow')
+  var publishDate = '2026/06/17 00:00:00' // 默认值
+  if (runtimeEl) {
+    var attrDate = runtimeEl.getAttribute('data-publishDate')
+    if (attrDate) publishDate = attrDate
+  }
 
   var startTime = new Date(publishDate).getTime()
   if (isNaN(startTime)) return
+
+  // 检查是否已经添加过，避免重复
+  if (footerEl.querySelector('.footer-runtime')) return
 
   var span = document.createElement('span')
   span.className = 'footer-runtime'
