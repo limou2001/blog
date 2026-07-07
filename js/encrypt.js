@@ -21,7 +21,8 @@ document.addEventListener('DOMContentLoaded', function () {
   function initEncryptUI () {
     var container = document.getElementById('hexo-blog-encrypt')
     var content = document.querySelector('.hbe-content')
-    var input = document.querySelector('.hbe-input-field-default')
+    // 兼容所有加密主题的输入框
+    var input = document.querySelector('.hbe-input-field-default, .hbe-input-field-xray, .hbe-input-field-wave, .hbe-input-field-up, .hbe-input-field-surge, .hbe-input-field-shrink, .hbe-input-field-flip, .hbe-input-field-blink')
     if (!input || !content || !container) return
     if (input.dataset.eyeInit === '1') return
     input.dataset.eyeInit = '1'
@@ -74,8 +75,11 @@ document.addEventListener('DOMContentLoaded', function () {
     content.appendChild(closeBtn)
     closeBtn.addEventListener('click', function () {
       restoreProgressBar()
-      // 清除初始化标记，允许下次重新初始化
-      if (input) input.dataset.eyeInit = '0'
+      // 清除所有加密主题输入框的初始化标记，允许下次重新初始化
+      var allInputs = document.querySelectorAll('.hbe-input-field-default, .hbe-input-field-xray, .hbe-input-field-wave, .hbe-input-field-up, .hbe-input-field-surge, .hbe-input-field-shrink, .hbe-input-field-flip, .hbe-input-field-blink')
+      allInputs.forEach(function (el) {
+        el.dataset.eyeInit = '0'
+      })
       if (window.history.length > 1) {
         window.history.back()
       } else {
@@ -133,7 +137,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 立即执行初始化（不延迟）
   function tryInit () {
-    var input = document.querySelector('.hbe-input-field-default')
+    // 兼容所有加密主题的输入框
+    var input = document.querySelector('.hbe-input-field-default, .hbe-input-field-xray, .hbe-input-field-wave, .hbe-input-field-up, .hbe-input-field-surge, .hbe-input-field-shrink, .hbe-input-field-flip, .hbe-input-field-blink')
     if (input && input.dataset.eyeInit !== '1') {
       initEncryptUI()
       return true
