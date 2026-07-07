@@ -132,14 +132,31 @@ function init() {
     if (!canvas) return
     createPeeps(), resize(), gsap.ticker.add(render), window.addEventListener("resize", resize)
 }
-document.addEventListener('pjax:success', (e) => {
+
+// 尝试重新初始化（兼容有无 pjax 的情况）
+function tryReinit() {
     canvas = document.querySelector('#peoplecanvas')
-    ctx = canvas ? canvas.getContext("2d") : undefined,
-    window.removeEventListener("resize", resize)
-    gsap.ticker.remove(render)
-    setTimeout(()=>{
-        init()
-    },300)
+    ctx = canvas ? canvas.getContext("2d") : undefined
+    if (canvas) {
+        window.removeEventListener("resize", resize)
+        gsap.ticker.remove(render)
+        allPeeps = []
+        availablePeeps = []
+        crowd = []
+        setTimeout(init, 300)
+    }
+}
+
+// 监听 pjax 成功事件（如果 pjax 存在）
+if (typeof pjax !== 'undefined') {
+    document.addEventListener('pjax:success', tryReinit)
+}
+
+// 备用：监听页面可见性变化，重新初始化
+document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible') {
+        tryReinit()
+    }
 })
 
 function createPeeps() {
