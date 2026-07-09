@@ -47,7 +47,7 @@ var config = {
         src: "/img/open-peeps-sheet.png",
         rows: 15,
         cols: 7,
-        crowdSize: 20 // 同时显示的人数
+        crowdSize: 15 // 同时显示的人数
     },
     randomRange = function (e, r) {
         return e + Math.random() * (r - e)
@@ -201,7 +201,9 @@ function removePeepFromCrowd(e) {
 
 function render() {
     if (!canvas) return
-    canvas.width = canvas.width, ctx.save(), ctx.scale(devicePixelRatio, devicePixelRatio), crowd.forEach(function (e) {
+    canvas.width = canvas.width, ctx.save(), ctx.scale(devicePixelRatio, devicePixelRatio), crowd.sort(function (e, r) {
+        return e.y - r.y
+    }), crowd.forEach(function (e) {
         e.render(ctx)
     }), ctx.restore()
 }
