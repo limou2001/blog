@@ -47,7 +47,7 @@ var config = {
         src: "/img/open-peeps-sheet.png",
         rows: 15,
         cols: 7,
-        crowdSize: 50 // 同时显示的人数（默认50，原图共105个）
+        crowdSize: 20 // 同时显示的人数
     },
     randomRange = function (e, r) {
         return e + Math.random() * (r - e)
@@ -71,7 +71,7 @@ var config = {
         var r, t, a = e.stage,
             n = e.peep,
             o = .5 < Math.random() ? 1 : -1,
-            i = 100 - 250 * gsap.parseEase("power2.in")(Math.random()),
+            i = randomRange(-50, 100),
             s = a.height - n.height + i;
         return 1 == o ? (r = -n.width, t = a.width, n.scaleX = 1) : (r = a.width + n.width, t = 0, n.scaleX = -1), n.x = r, n.y = s, {
             startX: r,
