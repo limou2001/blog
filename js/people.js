@@ -71,7 +71,7 @@ var config = {
         var r, t, a = e.stage,
             n = e.peep,
             o = .5 < Math.random() ? 1 : -1,
-            i = randomRange(-50, 100),
+            i = randomRange(0, 80),
             s = a.height - n.height + i;
         return 1 == o ? (r = -n.width, t = a.width, n.scaleX = 1) : (r = a.width + n.width, t = 0, n.scaleX = -1), n.x = r, n.y = s, {
             startX: r,
@@ -202,7 +202,7 @@ function removePeepFromCrowd(e) {
 function render() {
     if (!canvas) return
     canvas.width = canvas.width, ctx.save(), ctx.scale(devicePixelRatio, devicePixelRatio), crowd.sort(function (e, r) {
-        return e.y - r.y
+        return e.anchorY - r.anchorY
     }), crowd.forEach(function (e) {
         e.render(ctx)
     }), ctx.restore()
