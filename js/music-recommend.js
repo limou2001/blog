@@ -191,7 +191,7 @@
 
   /* ====== 加载歌曲 ====== */
   function loadSong() {
-    wrap.innerHTML = '<div class="music-loading">🎵 加载中...</div>'
+    wrap.innerHTML = '<div class="music-loading"><iconify-icon icon="ep:headset" class="ep-icon"></iconify-icon> 加载中...</div>'
     lrcBody.innerHTML = '<div class="music-lrc-empty">加载中...</div>'
     lrcData = []
     currentLine = -1
@@ -283,7 +283,7 @@
         updateControls()
       })
       .catch(function () {
-        wrap.innerHTML = '<div class="music-loading">🎵 加载失败，请刷新重试</div>'
+        wrap.innerHTML = '<div class="music-loading"><iconify-icon icon="ep:headset" class="ep-icon"></iconify-icon> 加载失败，请刷新重试</div>'
         lrcBody.innerHTML = '<div class="music-lrc-empty">加载失败</div>'
       })
   }

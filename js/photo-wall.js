@@ -107,7 +107,7 @@
     var existing = waterfall.querySelector('.photo-empty-state')
     if (existing) return
 
-    var emptyHTML = '\n<div class="photo-empty-state">\n  <span class="empty-icon">📸</span>\n  <p class="empty-title">还没有照片</p>\n  <p class="empty-hint">打开此页面的 Markdown 源文件<br>按照注释说明添加你的照片吧 ✨</p>\n</div>'
+    var emptyHTML = '\n<div class="photo-empty-state">\n  <span class="empty-icon"><iconify-icon icon="ep:camera" class="ep-icon"></iconify-icon></span>\n  <p class="empty-title">还没有照片</p>\n  <p class="empty-hint">打开此页面的 Markdown 源文件<br>按照注释说明添加你的照片吧 <iconify-icon icon="ep:star" class="ep-icon"></iconify-icon></p>\n</div>'
     waterfall.insertAdjacentHTML('beforeend', emptyHTML)
   }
 
@@ -169,7 +169,7 @@
         chartDom.classList.remove('china-map-loading')
         var fallback = document.createElement('div')
         fallback.className = 'china-map-fallback'
-        fallback.innerHTML = '<p>🗺️ 地图加载失败</p><p style="font-size:13px;color:#999;">请检查网络连接后刷新重试</p>'
+        fallback.innerHTML = '<p><iconify-icon icon="ep:map-location" class="ep-icon"></iconify-icon> 地图加载失败</p><p style="font-size:13px;color:#999;">请检查网络连接后刷新重试</p>'
         chartDom.appendChild(fallback)
       })
   }
@@ -303,7 +303,7 @@
       // 悬浮 tooltip
       path.addEventListener('mouseenter', function () {
         var displayName = shortName[name] || name
-        tooltip.innerHTML = '<strong>' + displayName + '</strong><br>📷 照片: ' + count + ' 张'
+        tooltip.innerHTML = '<strong>' + displayName + '</strong><br><iconify-icon icon="ep:camera" class="ep-icon"></iconify-icon> 照片: ' + count + ' 张'
         tooltip.style.display = 'block'
       })
       path.addEventListener('mousemove', function (e) {
@@ -471,7 +471,7 @@
       return
     }
 
-    bar.querySelector('.filter-label').textContent = '📍 ' + info.name
+    bar.querySelector('.filter-label').innerHTML = '<iconify-icon icon="ep:location" class="ep-icon"></iconify-icon> ' + info.name
     bar.querySelector('.filter-count').textContent = '共 ' + info.count + ' 张照片'
     bar.classList.add('visible')
   }
@@ -487,7 +487,7 @@
 
     var toast = document.createElement('div')
     toast.className = 'map-toast'
-    toast.innerHTML = '<span class="toast-icon">📸</span><p class="toast-title"></p><p class="toast-desc">该省份还没有风景照片<br>打开页面源文件，添加带有对应省份标记的照片吧 ✨</p><button class="toast-close">知道了</button>'
+    toast.innerHTML = '<span class="toast-icon"><iconify-icon icon="ep:camera" class="ep-icon"></iconify-icon></span><p class="toast-title"></p><p class="toast-desc">该省份还没有风景照片<br>打开页面源文件，添加带有对应省份标记的照片吧 <iconify-icon icon="ep:star" class="ep-icon"></iconify-icon></p><button class="toast-close">知道了</button>'
 
     document.body.appendChild(backdrop)
     document.body.appendChild(toast)
@@ -509,7 +509,7 @@
     var backdrop = document.querySelector('.map-toast-backdrop')
     if (!toast || !backdrop) return
 
-    toast.querySelector('.toast-title').textContent = '📍 ' + provinceName
+    toast.querySelector('.toast-title').innerHTML = '<iconify-icon icon="ep:location" class="ep-icon"></iconify-icon> ' + provinceName
     toast.classList.add('show')
     backdrop.classList.add('show')
   }

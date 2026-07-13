@@ -409,7 +409,7 @@
 }
 
 .china-map-loading::after {
-  content: '🗺️ 地图加载中...';
+  content: '地图加载中...';
   font-size: 0.9em;
   color: #999;
   letter-spacing: 1px;
