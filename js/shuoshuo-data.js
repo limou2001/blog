@@ -7,7 +7,7 @@ const shuoshuoData = [
   {
     "date": "2026-07-05",
     "content": "**首页轮播 & 人潮汹涌上线** — 引入 hexo-butterfly-swiper-anzhiyu 插件，首页新增文章轮播和「人潮汹涌」随机逛逛动画（基于 Open Peeps 精灵图 + GSAP）。修复了第三方图床失效导致动画不渲染的问题，将图片资源本地化。隐藏右侧文章轮播、扩大人潮汹涌区域，新增 crowdSize 参数控制同时显示人数",
-    "image": ""
+    "image": "https://gitee.com/gyqjava/picture/raw/master/blog/20231201135335-0-4016-image-9.jpg"
   },
   {
     "date": "2026-07-03",

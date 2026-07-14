@@ -12,25 +12,24 @@
 /* 月份区块 - 垂直排列 */
 .shuoshuo-month-section {
   margin-bottom: 32px;
+  width: 100%;
 }
 
-/* 瀑布流布局 - 使用flex实现多列 */
+/* 卡片网格布局 */
 .shuoshuo-waterfall {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
   gap: 16px;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* 卡片基础样式 */
+/* 卡片固定大小 */
 .shuoshuo-card {
   position: relative;
   border-radius: 12px;
-  overflow: visible;
-  display: block;
-  width: calc(33.333% - 11px);
+  overflow: hidden;
+  width: 100%;
   box-sizing: border-box;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -54,27 +53,39 @@
 .shuoshuo-card .glass-overlay {
   position: absolute;
   inset: 0;
-  bottom: 32px;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   pointer-events: none;
   z-index: 1;
-  border-radius: 12px 12px 0 0;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* 图片区域 - 保持在遮罩上方 */
 .shuoshuo-card.has-image .shuoshuo-card-image {
   position: relative;
   z-index: 2;
+  width: 100%;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.shuoshuo-card-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 300px;
+  object-fit: contain;
+  margin-bottom: 0;
 }
 
 /* 卡片内容区域 */
 .shuoshuo-card-content {
   position: relative;
   z-index: 1;
-  padding: 16px;
-  padding-bottom: 36px;
+  padding: 12px;
+  padding-bottom: 12px;
 }
 
 /* 文字遮罩背景 - 确保文字清晰可见 */
@@ -82,6 +93,8 @@
   background: rgba(255, 255, 255, 0.25);
   border-radius: 8px;
   padding: 12px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* 文字内容样式 */
@@ -92,11 +105,20 @@
   margin: 0;
 }
 
+
+
 .shuoshuo-card-content .ep-icon {
   width: 1.2em;
   height: 1.2em;
   vertical-align: -0.2em;
   margin-right: 4px;
+}
+
+/* 标签容器 */
+.shuoshuo-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
 /* 加粗文字 */
@@ -105,33 +127,35 @@
   font-weight: 700;
 }
 
-/* 日期样式 - 固定在底部 */
+/* 日期样式 - 独立显示在卡片上方 */
+.shuoshuo-card-item {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
 .shuoshuo-card-date {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 8px 16px;
-  background: rgba(0, 0, 0, 0.15);
-  color: #333;
-  font-size: 12px;
-  text-align: right;
+  color: var(--text-color, #666);
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  padding-left: 8px;
+  border-left: 3px solid var(--theme-color, #49b1f5);
 }
 
 /* 年份区块 - 包含年份标题和所有月份 */
 .shuoshuo-year-section {
   margin-bottom: 32px;
+  width: 100%;
 }
 
 .shuoshuo-year-title {
-  font-size: 22px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 700;
   color: var(--text-highlight-color, #1d1d1d);
   margin: 0 0 16px;
   padding: 8px 16px;
   background: var(--card-bg, #fff);
   border-radius: 8px;
-  border-left: 4px solid var(--theme-color, #49b1f5);
 }
 
 /* 月份区块 */
@@ -144,8 +168,8 @@
 
 .shuoshuo-month-title {
   font-size: 16px;
-  font-weight: 500;
-  color: var(--text-color, #6b7280);
+  font-weight: 600;
+  color: var(--text-color, #666);
   margin: 0 0 12px;
 }
 
@@ -163,8 +187,7 @@
 }
 
 [data-theme="dark"] .shuoshuo-card-date {
-  background: rgba(0, 0, 0, 0.3);
-  color: #e0e0e0;
+  color: #aaa;
 }
 
 [data-theme="dark"] .shuoshuo-year-title {
@@ -177,14 +200,8 @@
 }
 
 /* 响应式 */
-@media (max-width: 1024px) {
-  .shuoshuo-card {
-    width: calc(50% - 8px);
-  }
-}
-
 @media (max-width: 768px) {
   .shuoshuo-card {
-    width: 100%;
+    min-height: 100px;
   }
 }
