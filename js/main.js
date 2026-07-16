@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // 预加载翻转卡片背景图
+  const flipCardBgUrls = [
+    'https://raw.giteeusercontent.com/gyqjava/picture/raw/master/blog/info_front.jpg',
+    'https://raw.giteeusercontent.com/gyqjava/picture/raw/master/blog/info_back.png'
+  ]
+  flipCardBgUrls.forEach(url => {
+    const img = new Image()
+    img.src = url
+  })
+
   let headerContentWidth, $nav
   let mobileSidebarOpen = false
 

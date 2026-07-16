@@ -61,7 +61,7 @@
 
 /* --- 正面 --- */
 .flip-front {
-  background: url('/img/info_front.jpg') center/cover no-repeat;
+  background: url('https://raw.giteeusercontent.com/gyqjava/picture/raw/master/blog/info_front.jpg') center/cover no-repeat;
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   justify-content: flex-start;
@@ -162,7 +162,7 @@
 
 /* --- 反面 --- */
 .flip-back {
-  background: url('/img/info_back.png') center/cover no-repeat;
+  background: url('https://raw.giteeusercontent.com/gyqjava/picture/raw/master/blog/info_back.png') center/cover no-repeat;
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   justify-content: flex-end;
