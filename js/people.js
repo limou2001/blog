@@ -133,26 +133,31 @@ function init() {
     createPeeps(), resize(), gsap.ticker.add(render), window.addEventListener("resize", resize)
 }
 
-// 尝试重新初始化（兼容有无 pjax 的情况）
+// 尝试重新初始化（仅在首页时执行）
 function tryReinit() {
+    // 只在首页执行
+    if (window.location.pathname !== '/' && window.location.pathname !== '/index.html') return
+
     canvas = document.querySelector('#peoplecanvas')
-    ctx = canvas ? canvas.getContext("2d") : undefined
-    if (canvas) {
-        window.removeEventListener("resize", resize)
-        gsap.ticker.remove(render)
-        allPeeps = []
-        availablePeeps = []
-        crowd = []
-        setTimeout(init, 300)
+    if (!canvas) {
+        // DOM 可能还没完全就绪，延迟重试
+        setTimeout(tryReinit, 200)
+        return
     }
+
+    ctx = canvas.getContext("2d")
+    window.removeEventListener("resize", resize)
+    gsap.ticker.remove(render)
+    allPeeps = []
+    availablePeeps = []
+    crowd = []
+    setTimeout(init, 100)
 }
 
-// 监听 pjax 成功事件（如果 pjax 存在）
-if (typeof pjax !== 'undefined') {
-    document.addEventListener('pjax:success', tryReinit)
-}
+// 监听 pjax 完成事件（无条件注册，pjax 可能稍后才初始化）
+document.addEventListener('pjax:complete', tryReinit)
 
-// 备用：监听页面可见性变化，重新初始化
+// 监听页面可见性变化，重新初始化（仅首页）
 document.addEventListener('visibilitychange', function() {
     if (document.visibilityState === 'visible') {
         tryReinit()

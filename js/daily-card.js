@@ -62,7 +62,7 @@ function initDaily () {
   }
 
   card.addEventListener('click', function (e) {
-    if (e.target.closest('.daily-card-refresh') || e.currentTarget === card) {
+    if (e.target.closest('.daily-card-refresh')) {
       card.classList.add('refreshing')
       fetchQuote()
       setTimeout(function () { card.classList.remove('refreshing') }, 600)

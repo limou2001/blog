@@ -152,21 +152,12 @@ document.addEventListener('DOMContentLoaded', function () {
   // 持续监听加密框出现
   var observer = new MutationObserver(function (mutations, obs) {
     if (tryInit()) {
-      // 找到后继续监听，以防页面重新渲染
+      // 找到后立即断开，避免持续监听消耗性能
+      obs.disconnect()
     }
   })
   observer.observe(document.body, { childList: true, subtree: true })
-  setTimeout(function () { observer.disconnect() }, 30000)
-
-  // 持续监听加密框状态，确保进度条始终在最上层
-  var progressObserver = new MutationObserver(function () {
-    var encryptContainer = document.getElementById('hexo-blog-encrypt')
-    if (encryptContainer) {
-      bringProgressBarToTop()
-    }
-  })
-  progressObserver.observe(document.body, { childList: true, subtree: true, attributes: true })
-  setTimeout(function () { progressObserver.disconnect() }, 30000)
+  setTimeout(function () { observer.disconnect() }, 10000)
 
   // 解密成功后滚动到页面顶部，恢复进度条
   window.addEventListener('hexo-blog-decrypt', function () {

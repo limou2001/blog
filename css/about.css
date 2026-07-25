@@ -1,136 +1,121 @@
-/* 三行滚动技术栈样式 */
+/* 技术栈分组卡片样式 */
 .skills-marquee {
-  position: relative;
-  width: 100%;
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 16px 0;
-  overflow: hidden;
-  background: linear-gradient(90deg, rgba(73,177,245,0.06) 0%, rgba(0,196,182,0.06) 50%, rgba(73,177,245,0.06) 100%);
-  border-radius: 16px;
-  border: 1px solid rgba(73,177,245,0.12);
-}
-
-.skills-marquee::before,
-.skills-marquee::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  width: 120px;
-  height: 100%;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.skills-marquee::before {
-  left: 0;
-  background: linear-gradient(to right, var(--card-bg, #fff) 0%, transparent 100%);
-}
-
-.skills-marquee::after {
-  right: 0;
-  background: linear-gradient(to left, var(--card-bg, #fff) 0%, transparent 100%);
-}
-
-.skills-row {
-  display: flex;
-  gap: 16px;
-  width: max-content;
-  margin: 8px 0;
-}
-
-.skills-row:hover {
-  animation-play-state: paused;
-}
-
-.skills-row:nth-child(1) {
-  animation: marquee1 25s linear infinite;
-}
-
-.skills-row:nth-child(2) {
-  animation: marquee2 30s linear infinite;
-}
-
-.skills-row:nth-child(3) {
-  animation: marquee3 20s linear infinite;
-}
-
-@keyframes marquee1 {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-@keyframes marquee2 {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
-}
-
-@keyframes marquee3 {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.skill-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 16px 22px;
-  min-width: 100px;
+  gap: 14px;
+  width: 100%;
+  margin: 12px auto 0;
+}
+
+.skill-group {
   background: var(--card-bg, #fff);
-  border-radius: 14px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  white-space: nowrap;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  cursor: default;
-  border: 1px solid rgba(73,177,245,0.1);
+  border: 1px solid var(--border-color, #e8e8e8);
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  transition: box-shadow 0.25s ease;
 }
 
-.skill-item:hover {
-  transform: translateY(-3px) scale(1.04);
-  box-shadow: 0 8px 24px rgba(73,177,245,0.2);
-  border-color: rgba(73,177,245,0.35);
+.skill-group:hover {
+  box-shadow: 0 3px 14px rgba(73,177,245,0.1);
 }
 
-.skill-icon {
-  font-size: 32px;
-  display: inline-block;
-}
-
-/* 暗色模式适配 */
-[data-theme="dark"] .skills-marquee {
-  background: linear-gradient(90deg, rgba(73,177,245,0.1) 0%, rgba(0,196,182,0.1) 50%, rgba(73,177,245,0.1) 100%);
-}
-
-[data-theme="dark"] .skills-marquee::before {
-  background: linear-gradient(to right, var(--card-bg, #1a1a1a) 0%, transparent 100%);
-}
-
-[data-theme="dark"] .skills-marquee::after {
-  background: linear-gradient(to left, var(--card-bg, #1a1a1a) 0%, transparent 100%);
-}
-
-[data-theme="dark"] .skill-item {
+[data-theme="dark"] .skill-group {
   background: var(--card-bg, #1a1a1a);
+  border-color: #333;
+}
+
+.skill-group-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.skill-group-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #49B1F5 0%, #00c4b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.skill-group-subtitle {
+  font-size: 0.72rem;
+  color: #aaa;
+  padding: 2px 8px;
+  background: rgba(73,177,245,0.06);
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+[data-theme="dark"] .skill-group-subtitle {
+  color: #777;
+  background: rgba(73,177,245,0.1);
+}
+
+.skill-group-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(73,177,245,0.04);
+  border: 1px solid rgba(73,177,245,0.1);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.skill-tag:hover {
+  background: rgba(73,177,245,0.08);
+  border-color: rgba(73,177,245,0.25);
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .skill-tag {
+  background: rgba(73,177,245,0.06);
+  border-color: rgba(73,177,245,0.12);
+}
+
+.skill-tag-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-color, #333);
+}
+
+[data-theme="dark"] .skill-tag-name {
+  color: #e0e0e0;
+}
+
+.skill-tag-desc {
+  font-size: 0.72rem;
+  color: #aaa;
+}
+
+[data-theme="dark"] .skill-tag-desc {
+  color: #777;
 }
 
 /* 关于页面卡片样式 */
 .about-hero {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   text-align: left;
-  padding: 20px 30px 20px;
-  margin-bottom: 10px;
+  padding: 24px 28px;
+  margin-bottom: 0;
   min-height: auto;
   background: var(--card-bg, #fff);
   border: 1px solid var(--border-color, #e0e0e0);
   border-radius: 12px;
   position: relative;
-  gap: 30px;
+  gap: 20px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 
@@ -199,7 +184,7 @@
   font-size: 0.9rem;
   color: var(--text-color, #555);
   max-width: 480px;
-  margin-bottom: 14px;
+  margin-bottom: 8px;
   line-height: 1.6;
   position: relative;
   z-index: 1;
@@ -220,25 +205,26 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: 6px;
   position: relative;
   z-index: 1;
 }
 
 .about-tag {
-  padding: 5px 14px;
-  background: linear-gradient(135deg, #49B1F5 0%, #00c4b6 100%);
-  color: white;
+  padding: 4px 14px;
+  background: transparent;
+  color: #49B1F5;
+  border: 1.5px solid rgba(73,177,245,0.35);
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 500;
-  box-shadow: 0 2px 10px rgba(73,177,245,0.3);
   transition: all 0.25s ease;
 }
 
 .about-tag:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 18px rgba(73,177,245,0.4);
+  background: rgba(73,177,245,0.08);
+  border-color: rgba(73,177,245,0.6);
+  transform: translateY(-1px);
 }
 
 /* 头部区域信息展示 */
@@ -317,17 +303,19 @@
 /* ISTJ 性格图片样式 */
 .about-hero-personality {
   position: relative;
-  width: 150px;
-  height: 150px;
+  width: 130px;
+  height: 130px;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 10px 32px rgba(73,177,245,0.3);
+  box-shadow: 0 8px 24px rgba(73,177,245,0.2);
+  border: 2px solid rgba(73,177,245,0.15);
   transition: all 0.3s ease;
 }
 
 .about-hero-personality:hover {
-  transform: scale(1.05) rotate(2deg);
-  box-shadow: 0 14px 40px rgba(73,177,245,0.4);
+  transform: scale(1.04) rotate(1deg);
+  box-shadow: 0 12px 32px rgba(73,177,245,0.3);
+  border-color: rgba(73,177,245,0.35);
 }
 
 .about-hero-personality img {
@@ -367,7 +355,9 @@
 .about-personality-intro {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+  text-align: center;
+  margin-top: 4px;
 }
 
 .personality-type {
@@ -380,9 +370,10 @@
 }
 
 .personality-desc {
-  font-size: 0.8rem;
-  color: #777;
+  font-size: 0.75rem;
+  color: #999;
   line-height: 1.5;
+  max-width: 140px;
 }
 
 [data-theme="dark"] .personality-desc {
@@ -591,8 +582,8 @@
 @media (max-width: 768px) {
   .about-hero {
     flex-direction: column;
-    padding: 24px 16px;
-    gap: 24px;
+    padding: 20px 16px;
+    gap: 16px;
   }
 
   .about-hero-left {
@@ -641,8 +632,8 @@
   }
 
   .about-hero-personality {
-    width: 140px;
-    height: 140px;
+    width: 110px;
+    height: 110px;
   }
 
   .about-personality-intro {
@@ -660,18 +651,24 @@
     padding: 10px 16px;
   }
 
-  .skill-item {
-    padding: 12px 16px;
-    min-width: 80px;
-    font-size: 12px;
+  .skill-tag {
+    padding: 5px 10px;
   }
 
-  .skill-icon {
-    font-size: 26px;
+  .skill-tag-name {
+    font-size: 0.78rem;
+  }
+
+  .skill-tag-desc {
+    font-size: 0.68rem;
+  }
+
+  .skill-group {
+    padding: 14px 16px;
   }
 
   .about-map {
-    height: 220px;
+    height: 200px;
   }
 
   .about-hero-info {
@@ -729,11 +726,12 @@
   position: relative;
   width: 100%;
   max-width: 700px;
-  height: 280px;
-  margin: 16px auto;
+  height: 260px;
+  margin: 10px auto;
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 6px 25px rgba(73,177,245,0.18);
+  box-shadow: 0 4px 20px rgba(73,177,245,0.12);
+  border: 1px solid rgba(73,177,245,0.1);
 }
 
 .about-map-container {
@@ -754,14 +752,15 @@
 
 .about-map-content {
   position: absolute;
-  bottom: 16px;
-  left: 16px;
-  background: rgba(255,255,255,0.92);
-  padding: 12px 20px;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(255,255,255,0.95);
+  padding: 10px 16px;
   border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
   backdrop-filter: blur(8px);
   z-index: 1000;
+  border: 1px solid rgba(73,177,245,0.1);
 }
 
 [data-theme="dark"] .about-map-content {
@@ -915,4 +914,11 @@
 .about-hobby-uid {
   font-size: 0.75rem;
   color: #999;
+}
+
+/* 关于页面标题间距优化 */
+#about-page h2,
+.post-content h2 {
+  margin-top: 20px !important;
+  margin-bottom: 8px !important;
 }
