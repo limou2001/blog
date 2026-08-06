@@ -1,7 +1,7 @@
 // ==========================
 // 🧭 调试开关
 // ==========================
-const DEBUG_MODE = false;
+var DEBUG_MODE = false;
 function debugLog(...args) {
   if (DEBUG_MODE) console.log(...args);
 }
@@ -9,9 +9,14 @@ function debugLog(...args) {
 // ==========================
 // 🕓 时钟与天气展示
 // ==========================
+var _clockTimer = null; // 保存定时器ID，防止Pjax下重复创建
+
 function clockUpdateTime(info, city, timezone = 'Asia/Shanghai') {
   const clock_box = document.getElementById('hexo_electric_clock');
   if (!clock_box) return;
+
+  // 清除旧的定时器，防止多个实例叠加
+  if (_clockTimer) { clearInterval(_clockTimer); _clockTimer = null; }
 
   let currentColor = '#000';
   switch (info.now.icon) {
@@ -56,19 +61,26 @@ function clockUpdateTime(info, city, timezone = 'Asia/Shanghai') {
   function zeroPadding(num,d){return('0'.repeat(d)+num).slice(-d);}
 
   function updateTime() {
+    // Pjax导航后DOM元素可能已不存在，需做null检查
+    var timeEl = document.getElementById('card-clock-time');
+    var dateEl = document.getElementById('card-clock-clockdate');
+    var ampmEl = document.getElementById('card-clock-dackorlight');
+    if (!timeEl || !dateEl || !ampmEl) {
+      clearInterval(_clockTimer); _clockTimer = null; return;
+    }
     const now = new Date();
     const options = { timeZone: timezone, hour12: false };
     const timeString = now.toLocaleString('en-US', options);
     const cd = new Date(timeString);
 
-    document.getElementById('card-clock-time').innerHTML =
+    timeEl.innerHTML =
       zeroPadding(cd.getHours(),2)+':'+zeroPadding(cd.getMinutes(),2)+':'+zeroPadding(cd.getSeconds(),2);
-    document.getElementById('card-clock-clockdate').innerHTML =
+    dateEl.innerHTML =
       `${cd.getFullYear()}-${zeroPadding(cd.getMonth()+1,2)}-${zeroPadding(cd.getDate(),2)} ${week[cd.getDay()]}`;
-    document.getElementById('card-clock-dackorlight').innerHTML = cd.getHours()>12?' P M':' A M';
+    ampmEl.innerHTML = cd.getHours()>12?' P M':' A M';
   }
 
-  setInterval(updateTime,1000);
+  _clockTimer = setInterval(updateTime,1000);
   updateTime();
 }
 
@@ -128,5 +140,7 @@ function getIpAndWeather(default_city = '') {
 // 示例3：国内默认城市（深圳）
 // getIpAndWeather('深圳');
 
-// 实际运行
-getIpAndWeather(default_city);
+// 实际运行 - 防止Pjax重复执行
+if (typeof default_city !== 'undefined') {
+  getIpAndWeather(default_city);
+}

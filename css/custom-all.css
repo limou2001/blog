@@ -2280,3 +2280,394 @@
     gap: 4px;
   }
 }
+
+/* ==========================================
+   留言板页面样式
+   ========================================== */
+
+/* Hero 区域 */
+.comment-hero {
+  text-align: center;
+  padding: 48px 20px 32px;
+  position: relative;
+}
+
+.comment-hero-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  display: inline-block;
+  animation: comment-float 3s ease-in-out infinite;
+  color: #49b1f5;
+}
+
+@keyframes comment-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.comment-hero-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 12px;
+  background: linear-gradient(135deg, #49b1f5 0%, #66d9e8 50%, #49b1f5 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: comment-shimmer 3s linear infinite;
+}
+
+@keyframes comment-shimmer {
+  to { background-position: 200% center; }
+}
+
+[data-theme="dark"] .comment-hero-title {
+  background: linear-gradient(135deg, #49b1f5 0%, #00d4aa 50%, #49b1f5 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.comment-hero-subtitle {
+  font-size: 1rem;
+  color: var(--text-color, #555);
+  margin: 0;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+[data-theme="dark"] .comment-hero-subtitle {
+  color: #bbb;
+}
+
+/* 指南卡片区域 */
+.comment-guidelines {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-width: 800px;
+  margin: 0 auto 32px;
+  padding: 0 20px;
+}
+
+.guideline-card {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border-color, #e8e8e8);
+  border-radius: 12px;
+  padding: 24px 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.guideline-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(73, 177, 245, 0.12);
+  border-color: rgba(73, 177, 245, 0.4);
+}
+
+.guideline-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #49b1f5;
+  transition: transform 0.3s ease;
+}
+
+.guideline-card:hover .guideline-icon {
+  transform: scale(1.15);
+}
+
+.guideline-card h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 6px;
+  color: var(--text-color, #333);
+}
+
+.guideline-card p {
+  font-size: 0.8rem;
+  color: var(--text-color, #888);
+  margin: 0;
+  line-height: 1.4;
+}
+
+[data-theme="dark"] .guideline-card {
+  background: var(--card-bg, #1a1a1a);
+  border-color: var(--border-color, #333);
+}
+
+[data-theme="dark"] .guideline-card:hover {
+  box-shadow: 0 8px 24px rgba(73, 177, 245, 0.08);
+  border-color: rgba(73, 177, 245, 0.3);
+}
+
+[data-theme="dark"] .guideline-card h3 {
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .guideline-card p {
+  color: #999;
+}
+
+/* 特色标签条 */
+.comment-stats {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 700px;
+  margin: 0 auto 32px;
+  padding: 0 20px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-color, #666);
+  background: rgba(73, 177, 245, 0.06);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(73, 177, 245, 0.15);
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+  background: rgba(73, 177, 245, 0.12);
+  border-color: rgba(73, 177, 245, 0.3);
+  transform: translateY(-2px);
+}
+
+.stat-item i {
+  color: #49b1f5;
+  font-size: 0.9rem;
+}
+
+[data-theme="dark"] .stat-item {
+  background: rgba(73, 177, 245, 0.08);
+  border-color: rgba(73, 177, 245, 0.12);
+  color: #bbb;
+}
+
+[data-theme="dark"] .stat-item:hover {
+  background: rgba(73, 177, 245, 0.15);
+  border-color: rgba(73, 177, 245, 0.25);
+}
+
+/* 提示信息 */
+.comment-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  margin: 0 auto 24px;
+  max-width: 600px;
+  background: rgba(73, 177, 245, 0.06);
+  border: 1px solid rgba(73, 177, 245, 0.2);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--text-color, #666);
+}
+
+.comment-notice i {
+  color: #49b1f5;
+  font-size: 1rem;
+}
+
+[data-theme="dark"] .comment-notice {
+  background: rgba(73, 177, 245, 0.08);
+  border-color: rgba(73, 177, 245, 0.15);
+  color: #bbb;
+}
+
+/* 留言板页面移动端适配 */
+@media screen and (max-width: 768px) {
+  .comment-hero {
+    padding: 32px 16px 24px;
+  }
+  .comment-hero-title {
+    font-size: 1.5rem;
+  }
+  .comment-hero-subtitle {
+    font-size: 0.9rem;
+  }
+  .comment-guidelines {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0 16px;
+  }
+  .guideline-card {
+    padding: 16px 10px;
+  }
+  .guideline-icon {
+    font-size: 1.6rem;
+  }
+  .guideline-card h3 {
+    font-size: 0.85rem;
+  }
+  .guideline-card p {
+    font-size: 0.75rem;
+  }
+  .comment-notice {
+    margin: 0 16px 20px;
+    font-size: 0.8rem;
+  }
+  .comment-stats {
+    gap: 10px;
+    padding: 0 16px;
+  }
+  .stat-item {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+  }
+}
+
+/* ==========================================
+   首页封面区域背景透明，透出全站背景图
+   ========================================== */
+
+/* 基础 #page-header 去除默认蓝色背景和过渡动画，避免 Pjax 切换时闪烁 */
+#page-header {
+  background-color: transparent !important;
+  background-image: none !important;
+  transition: none !important;
+}
+
+#page-header.full_page {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* nav-fixed 时整个 page-header 也保持透明 */
+#page-header.nav-fixed {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* 强制移除封面区域可能残留的遮罩伪元素 */
+#page-header.full_page:before {
+  display: none !important;
+  content: none !important;
+}
+
+/* 封面文字描边效果，增强可读性 */
+#site-title,
+#site-subtitle {
+  text-shadow:
+    -1px -1px 0 rgba(0, 0, 0, 0.5),
+     1px -1px 0 rgba(0, 0, 0, 0.5),
+    -1px  1px 0 rgba(0, 0, 0, 0.5),
+     1px  1px 0 rgba(0, 0, 0, 0.5),
+     0 2px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 页脚背景透明，透出全站随机背景图，遮罩由 mask.footer 提供 */
+#footer {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* ==========================================
+   首页卡片半透明毛玻璃效果
+   ========================================== */
+
+/* 文章卡片、通用卡片 */
+.cardHover,
+/* 侧边栏小部件（个人介绍、公告等） */
+#aside-content .card-widget {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* 导航栏背景透明，去除遮罩（覆盖 nav-fixed 和 not-top-img 两种状态） */
+#page-header.nav-fixed #nav,
+#page-header.not-top-img #nav {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* 导航栏字体颜色始终保持白色，轻描边增强可读性 */
+#page-header #nav a,
+#page-header #nav span.site-page,
+#page-header #nav .site-name,
+#page-header #nav #toggle-menu {
+  color: var(--light-grey) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+#page-header #nav a:hover,
+#page-header #nav span.site-page:hover,
+#page-header #nav #toggle-menu:hover {
+  color: var(--white) !important;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5) !important;
+}
+
+#page-header.nav-fixed #nav a,
+#page-header.nav-fixed #nav span.site-page,
+#page-header.nav-fixed #nav #blog-info,
+#page-header.not-top-img #nav a,
+#page-header.not-top-img #nav span.site-page,
+#page-header.not-top-img #nav #blog-info {
+  color: var(--light-grey) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 去除导航栏切换动画 */
+#page-header #nav {
+  transition: none !important;
+}
+
+/* 二级导航栏毛玻璃风格 */
+#page-header #nav .menus_item_child {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 5px 20px -4px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#page-header #nav .menus_item_child li:hover {
+  background: rgba(73, 177, 245, 0.12) !important;
+}
+
+#page-header #nav .menus_item_child a {
+  color: #333 !important;
+  text-shadow: none !important;
+}
+
+#page-header #nav .menus_item_child a:hover {
+  color: #49b1f5 !important;
+}
+
+[data-theme="dark"] #page-header #nav .menus_item_child {
+  background: rgba(30, 30, 30, 0.78) !important;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] #page-header #nav .menus_item_child li:hover {
+  background: rgba(73, 177, 245, 0.15) !important;
+}
+
+[data-theme="dark"] #page-header #nav .menus_item_child a {
+  color: #ddd !important;
+}
+
+[data-theme="dark"] #page-header #nav .menus_item_child a:hover {
+  color: #49b1f5 !important;
+}
+
+/* 暗色模式适配 */
+[data-theme="dark"] .cardHover,
+[data-theme="dark"] #aside-content .card-widget {
+  background: rgba(30, 30, 30, 0.75) !important;
+}
