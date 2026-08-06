@@ -1,0 +1,63 @@
+/* 个人卡片内的搜索入口按钮（样式复用 #card-info-btn） */
+
+/* 隐藏顶部导航栏的原生搜索按钮（已迁移到个人卡片内） */
+#search-button {
+  display: none !important;
+}
+
+/* 容器 <a> 改为 <div>，沿用块级 + 相同外边距 */
+.card-search-entry {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  margin: 14px 0 0; /* 顶部 14px 与 Follow Me 间距一致，左右由 .card-info padding 控制 */
+  background-color: var(--btn-bg);
+  color: var(--btn-color);
+  text-align: center;
+  line-height: 2.4;
+  border-radius: 7px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+.card-search-entry:hover {
+  background-color: var(--btn-hover-color);
+}
+
+.card-search-entry i,
+.card-search-entry .card-search-placeholder {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.card-search-entry i {
+  font-size: 0.95em;
+}
+
+.card-search-entry .card-search-placeholder {
+  padding-left: 10px;
+}
+
+/* 简易涟漪：点击时短暂高亮 */
+.card-search-entry:active::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  height: 120px;
+  margin: -60px 0 0 -60px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: scale(0);
+  animation: card-search-ripple 0.6s ease-out;
+  pointer-events: none;
+}
+
+@keyframes card-search-ripple {
+  to {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}

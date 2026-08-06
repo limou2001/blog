@@ -1,0 +1,89 @@
+/* 分类页卡片网格 - 简约风格 */
+
+.category-lists {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.category-lists .category-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  padding: 0;
+  list-style: none !important;
+}
+
+/* li 作为卡片 */
+.category-lists .category-list li.category-list-item {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  border-radius: 8px;
+  border: 1px solid var(--light-grey, #e8e8e8);
+  background: var(--card-bg, #fff);
+  transition: border-color 0.2s ease;
+  overflow: hidden;
+}
+
+.category-lists .category-list li.category-list-item::before {
+  display: none;
+}
+
+.category-lists .category-list li.category-list-item:hover {
+  border-color: #49B1F5;
+}
+
+/* 链接占满卡片 */
+.category-lists .category-list-item a.category-list-link {
+  display: block;
+  padding: 20px 24px;
+  padding-right: 60px;
+  color: var(--font-color) !important;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.category-lists .category-list-item a.category-list-link:hover {
+  color: #49B1F5 !important;
+}
+
+/* 文章数 - 绝对定位到右侧 */
+.category-lists .category-list-item .category-list-count {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 0 !important;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--card-meta, #858585);
+}
+
+.category-lists .category-list-item .category-list-count::before {
+  content: '(';
+}
+
+.category-lists .category-list-item .category-list-count::after {
+  content: ')';
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .category-lists .category-list {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .category-lists .category-list-item a.category-list-link {
+    padding: 16px 20px;
+    padding-right: 56px;
+    font-size: 15px;
+  }
+}
+
+/* 暗色模式 */
+[data-theme="dark"] .category-lists .category-list li.category-list-item {
+  border-color: var(--dark-border, #3d3d3d);
+}
