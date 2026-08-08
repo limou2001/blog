@@ -1,0 +1,161 @@
+/* 追番/追剧页面自定义样式 */
+
+/* 优化卡片间距 */
+.bangumi-item {
+  margin: 16px 0;
+  padding: 16px;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bangumi-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px var(--bangumi-shadow);
+}
+
+/* 封面图片优化 */
+.bangumi-picture {
+  flex: 0 0 120px !important;
+  width: 120px !important;
+}
+
+.bangumi-picture img {
+  width: 120px !important;
+  height: auto;
+  border-radius: 8px !important;
+}
+
+/* 标题样式优化 */
+.bangumi-title {
+  font-size: 17px !important;
+  margin-bottom: 8px !important;
+}
+
+.bangumi-title a {
+  color: var(--bangumi-text);
+  transition: color 0.2s;
+}
+
+.bangumi-title a:hover {
+  color: var(--bangumi-accent) !important;
+}
+
+/* 标签页样式优化 */
+.bangumi-tabs {
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.bangumi-tab {
+  flex: 1 1 80px;
+  padding: 10px 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.bangumi-active {
+  background: var(--bangumi-accent) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(47, 128, 237, 0.3);
+}
+
+.bangumi-tab:hover:not(.bangumi-active) {
+  background: var(--bangumi-accent-soft);
+}
+
+/* 评分星星颜色 */
+.bangumi-starstop {
+  filter: hue-rotate(-20deg) saturate(1.2);
+}
+
+/* 简介文字优化 */
+.bangumi-comments p {
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+}
+
+/* 进度条样式优化 */
+.bangumi-info .bangumi-progress {
+  border-radius: 6px;
+  height: 22px;
+}
+
+.bangumi-info .bangumi-progress .progress-bar {
+  border-radius: 6px;
+}
+
+/* 引用样式优化 */
+.bangumi-quote {
+  border-left-width: 4px;
+  border-radius: 10px;
+  padding: 14px 16px 14px 44px;
+}
+
+.bangumi-quote::before {
+  font-size: 32px;
+  top: 6px;
+  left: 10px;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .bangumi-item {
+    flex-direction: column;
+    padding: 12px;
+  }
+
+  .bangumi-picture {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .bangumi-picture img {
+    width: 140px !important;
+    height: auto;
+  }
+
+  .bangumi-info {
+    padding-left: 0 !important;
+  }
+
+  .bangumi-title {
+    font-size: 16px !important;
+    text-align: center;
+  }
+
+  .bangumi-info-items {
+    justify-content: center;
+  }
+}
+
+/* 暗色模式额外优化 */
+[data-theme="dark"] .bangumi-active {
+  box-shadow: 0 4px 12px rgba(123, 183, 255, 0.3);
+}
+
+/* 分页按钮优化 */
+.bangumi-button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.bangumi-button:hover {
+  border-color: var(--bangumi-accent);
+  color: var(--bangumi-accent) !important;
+}
+
+/* 加载动画 */
+.bangumi-picture img {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}

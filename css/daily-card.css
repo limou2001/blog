@@ -1,0 +1,113 @@
+/* 每日一言卡片 - 必应美图背景 */
+.daily-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  min-height: 180px;
+  background: linear-gradient(135deg, #49B1F5, #00c4b6);
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.daily-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 半透明遮罩，确保文字可读 */
+.daily-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.55) 100%);
+  z-index: 1;
+}
+
+.daily-card-content {
+  position: relative;
+  z-index: 2;
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 180px;
+  box-sizing: border-box;
+}
+
+.daily-card-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.daily-card-title i {
+  font-size: 14px;
+}
+
+.daily-card-text {
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.7;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  margin: 12px 0;
+  word-break: break-word;
+}
+
+.daily-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12px;
+}
+
+.daily-card-from {
+  font-style: italic;
+}
+
+.daily-card-refresh {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s;
+}
+
+.daily-card:hover .daily-card-refresh {
+  color: rgba(255, 255, 255, 1);
+}
+
+.daily-card-refresh i {
+  transition: transform 0.5s;
+}
+
+.daily-card.refreshing .daily-card-refresh i {
+  transform: rotate(360deg);
+}
+
+/* 加载中状态 */
+.daily-card.loading .daily-card-text {
+  opacity: 0.6;
+}
+
+/* 必应美图来源标识 */
+.daily-card-bing-tag {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 3;
+  background: rgba(0, 0, 0, 0.4);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+}
