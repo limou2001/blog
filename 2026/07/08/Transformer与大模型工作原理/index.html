@@ -166,7 +166,13 @@
   const webBgDiv = document.getElementById('web_bg')
 
   const setRandomBg = () => {
-    webBgDiv.style = arr[Math.floor(Math.random() * arr.length)]
+    const newStyle = arr[Math.floor(Math.random() * arr.length)]
+    const urlMatch = newStyle.match(/url\(['"]?([^'"]+)['"]?\)/)
+    if (!urlMatch) { webBgDiv.style = newStyle; return }
+    const img = new Image()
+    img.onload = () => { webBgDiv.style = newStyle }
+    img.onerror = () => {} // 加载失败则保留默认背景
+    img.src = urlMatch[1]
   }
 
   document.addEventListener('DOMContentLoaded', setRandomBg)
