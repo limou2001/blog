@@ -1,0 +1,15 @@
+/* 顶部阅读进度条 */
+
+/* 顶部阅读进度条：固定细条，随滚动填充 */
+.reading-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: linear-gradient(90deg, #49B1F5, #00c4b6);
+  z-index: 9999;
+  transition: width 0.1s ease;
+  box-shadow: 0 0 8px rgba(73, 177, 245, 0.5);
+  pointer-events: none;
+}
